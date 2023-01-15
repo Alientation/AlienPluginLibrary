@@ -1,0 +1,3 @@
+CustomCommand
+- name, id, aliases, description, permissions, usage
+- todo: parameters (quantity, constraints), usageConditions

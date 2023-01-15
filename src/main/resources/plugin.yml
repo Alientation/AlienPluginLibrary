@@ -1,0 +1,6 @@
+name: DoomboheadPlugin
+version: '${project.version}'
+main: me.alientation.doomboheadplugin.DoomboheadPlugin
+api-version: 1.19
+authors: [ Alientation ]
+description: Plugin for the Doombohead Server

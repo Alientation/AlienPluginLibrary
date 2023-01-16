@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestCustomCommand extends CustomCommandAPI {
-    @CommandAnnotation(commandID = "help", commandName = "help",
-            commandDescription = "Help Command",
-            commandAliases = {"helpme"})
+    @CommandAnnotation(id = "help", name = "help",
+            description = "Help Command",
+            aliases = {"helpme"})
     @PermissionAnnotation(permission = "help", required = false)
     public boolean helpCommand(CommandSender sender, Command cmd, String label, String[] args) {
         sender.sendMessage("No help for you loser");
@@ -18,7 +18,7 @@ public class TestCustomCommand extends CustomCommandAPI {
     }
 
 
-    @CommandAnnotation(commandID = "help.list", commandName = "list")
+    @CommandAnnotation(id = "help.list", name = "list")
     @PermissionAnnotation(permission = "help.list", required = false)
     public boolean helpListCommand(CommandSender sender, Command cmd, String label, String[] args) {
         sender.sendMessage("Help List\n-----------------------\n1) nothing\n2) helps\n------------------------");
@@ -26,7 +26,7 @@ public class TestCustomCommand extends CustomCommandAPI {
     }
 
 
-    @CommandAnnotation(commandID = "help.list.add", commandName = "add")
+    @CommandAnnotation(id = "help.list.add", name = "add")
     @PermissionAnnotation(permission = "help.add", required = true)
     @PermissionAnnotation(permission = "admin", required = false)
     public boolean helpAddCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -35,7 +35,7 @@ public class TestCustomCommand extends CustomCommandAPI {
     }
 
 
-    @CommandAnnotation(commandID = "help.hello", commandName = "hello", commandAliases = {"hi"})
+    @CommandAnnotation(id = "help.hello", name = "hello", aliases = {"hi"})
     @PermissionAnnotation(permission = "help",required=false)
     public boolean helpHelloCommand(CommandSender sender, Command cmd, String label, String[] args) {
         sender.sendMessage("hi");

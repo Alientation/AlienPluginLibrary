@@ -15,8 +15,8 @@ public class CustomGUICommand extends CustomCommandAPI {
 		this.guiManager = guiManager;
 	}
 	
-	@CommandAnnotation(commandID = "customgui.show", commandName = "show",
-			commandDescription = "Shows a test gui")
+	@CommandAnnotation(id = "customgui.show", name = "show",
+			description = "Shows a test gui")
 	@PermissionAnnotation(permission = "customgui", required = true)
 	public boolean showGUICommand(CommandSender sender) {
 		if (sender instanceof Player) {

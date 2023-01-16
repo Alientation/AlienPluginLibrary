@@ -12,9 +12,9 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({METHOD})
 public @interface CommandAnnotation {
-	String commandName();
-	String commandID();
-	String[] commandAliases() default {};
-	String commandDescription() default "";
-	String commandUsage() default "";
+	String name();
+	String id();
+	String[] aliases() default {};
+	String description() default "";
+	String usage() default "";
 }

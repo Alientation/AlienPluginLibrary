@@ -63,12 +63,12 @@ public class CustomCommandAPI {
 			CommandAnnotation commandAnnotation = method.getAnnotation(CommandAnnotation.class);
 			PermissionAnnotation[] permissionAnnotations = method.getAnnotationsByType(PermissionAnnotation.class);
 
-			String commandName = commandAnnotation.commandName();
-			String commandID = commandAnnotation.commandID();
+			String commandName = commandAnnotation.name();
+			String commandID = commandAnnotation.id();
 
-			List<String> commandAliases = new ArrayList<>(Arrays.asList(commandAnnotation.commandAliases()));
-			String commandDescription = commandAnnotation.commandDescription();
-			String commandUsage = commandAnnotation.commandUsage();
+			List<String> commandAliases = new ArrayList<>(Arrays.asList(commandAnnotation.aliases()));
+			String commandDescription = commandAnnotation.description();
+			String commandUsage = commandAnnotation.usage();
 
 			List<String> commandPermissions = new ArrayList<>();
 			List<Boolean> commandRequiredPermissions = new ArrayList<>();
@@ -78,7 +78,7 @@ public class CustomCommandAPI {
 			}
 
 			//maps method to command pathway
-			this.methodMap.put("@commandAnnotation@" + commandAnnotation.commandID(), method);
+			this.methodMap.put("@commandAnnotation@" + commandAnnotation.id(), method);
 
 			//instantiates the custom command
 			CustomCommand command = this.getCommand(commandID, commandName);

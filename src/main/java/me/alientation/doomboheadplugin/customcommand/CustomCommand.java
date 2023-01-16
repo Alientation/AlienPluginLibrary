@@ -25,8 +25,10 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	//name of the command /help list -> list
 	private final String name;
 
+	//description of the command that is displayed
 	private final String description;
 
+	//usage displayed when the onCommand fails
 	private final String usage;
 
 	//Aliases to the command

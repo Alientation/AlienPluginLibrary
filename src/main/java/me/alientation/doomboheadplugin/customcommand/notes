@@ -2,5 +2,8 @@ Link command permissions with custom permission
 add more options/settings to custom command (whether or not to show all available command even if sender does not have permissions, etc)
 Log tools (probably separate)
 More annotations
-Work on CommandArgumentAnnotation, ParameterFlagAnnotation, ParameterOptionalAnnotation
+Work on ParameterFlagAnnotation, ParameterOptionalAnnotation
 Reflection library to easily compare parameter and return types if it matches
+
+
+CommandArgumentAnnotation

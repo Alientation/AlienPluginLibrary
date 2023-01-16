@@ -17,6 +17,14 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Class for storing information regarding a CustomCommand and forwarding functionality to reflected methods
  * todo allow for changing attributes of command (name, description, usage) by deleting old command from map and making a new command
+ * <p>
+ *
+ * command ids are stored in this way
+ * static names are plainly the parent's id + "." + the command name
+ * so for example /help list add has the id help.list.add (for the command add of the help.list parent command)
+ * <p>
+ * however if the command has parameters instead of ".", there is a "?" + the number of parameters there are for that command
+ * for example /help list add ___ has the id help.list.add?1
  */
 public class CustomCommand implements CommandExecutor, TabCompleter {
 	//A unique identifier for the specific command. For example the command /help list -> help.list

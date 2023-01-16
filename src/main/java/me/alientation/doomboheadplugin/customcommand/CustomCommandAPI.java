@@ -54,6 +54,8 @@ public class CustomCommandAPI {
 				this.methodMap.put("@tabAnnotation@" + tabAnnotation.commandID(), method);
 				CustomCommand command = this.getCommand(tabAnnotation.commandID());
 				command.validateTabMethod(method, this);
+
+				System.out.println("Registering Command Tab Method " + this.getCommand(tabAnnotation.commandID()));
 				continue;
 			}
 
@@ -96,13 +98,16 @@ public class CustomCommandAPI {
 			for (int i = 0; i < commandPermissions.size(); i++)
 				command.addPermission(commandPermissions.get(i),commandRequiredPermissions.get(i));
 
+			System.out.println("Registering Command Method " + this.getCommand(commandAnnotation.commandID()));
+
 			if (command.isParent()) {
+				System.out.println("^ is a parent command");
 				Field bukkitCommandMap;
 				try {
 					bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 					bukkitCommandMap.setAccessible(true);
 					CommandMap commandMap = ((CommandMap) bukkitCommandMap.get(Bukkit.getServer()));
-					commandMap.register(command.getCommandName(), new BaseCommand(commandName,commandDescription, commandUsage, commandAliases, command));
+					commandMap.register(commandName, new BaseCommand(commandName,commandDescription, commandUsage, commandAliases, command));
 
 					if (this.commandManager.getPlugin().getCommand(commandName) != null)
 						Objects.requireNonNull(this.commandManager.getPlugin().getCommand(commandName)).unregister(commandMap);

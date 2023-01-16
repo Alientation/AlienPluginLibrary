@@ -12,11 +12,6 @@ import java.lang.annotation.Target;
 @Repeatable(PermissionAnnotations.class)
 public @interface PermissionAnnotation {
 	String permission();
-	boolean required();
-}
 
-@Retention(RUNTIME)
-@Target({METHOD})
-@interface PermissionAnnotations {
-	PermissionAnnotation[] value();
+	boolean required();
 }

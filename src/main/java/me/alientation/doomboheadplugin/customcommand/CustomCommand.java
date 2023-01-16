@@ -2,11 +2,7 @@ package me.alientation.doomboheadplugin.customcommand;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import me.alientation.doomboheadplugin.customcommand.events.CommandCallAttemptEvent;
 import me.alientation.doomboheadplugin.customcommand.events.CommandCallSuccessEvent;
@@ -161,20 +157,27 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		CommandCallAttemptEvent commandCallAttemptEvent = new CommandCallAttemptEvent(this);
 		Bukkit.getPluginManager().callEvent(commandCallAttemptEvent); //initiates event
 
+		System.out.println(command.getName() + " Command called with " + Arrays.toString(args) + " args");
+		System.out.println("Checking if command call attempt event is cancelled");
 		//command call is cancelled
 		if (commandCallAttemptEvent.isCancelled()) return !commandCallAttemptFail(sender,command,label,args);
 
+		System.out.println("Checking if sender has permissions");
 		//sender doesn't have permissions
 		if (!hasPermissions(sender)) return !invalidPermissions(sender,command,label,args);
 
+		System.out.println("Checking if there is a child command");
 		CustomCommand child = args.length > 0 ? getChildrenByName(args[0]) : null;
 		//processes down the argument pathway if there exists a children command
 		if (child != null) return child.onCommand(sender, command, label, removeFirst(args));
 
+		System.out.println("Checking if command is invalid");
 		//no linked on command method
 		if (this.commandMethod == null) return !invalidCommand(sender,command,label,args);
 
 		//TODO: Add parameter flag annotations so that the user can greater customize the parameters that get accepted
+
+		System.out.println("Passed all checks, proceeding to invoking command");
 
 		//Object[] params = {sender,command,label,args};
 		//matches parameters to the command method parameters
@@ -214,7 +217,9 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+		System.out.println("Tab completion for " + command.getName() + " with " + Arrays.toString(args) + " args");
 		if (this.tabMethod != null) { //there is a tab complete method for this
+			System.out.println("No tab completion for this command");
 			Object[] params = new Object[this.tabMethod.getParameterCount()];
 			int paramsIndex = 0;
 			for (Class<?> c : this.tabMethod.getParameterTypes()) {
@@ -235,9 +240,10 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		//default tab complete
 
 		if (args.length > 1) { //there are arguments, so processing of tab complete shouldn't happen here
+			System.out.println("Checking child for tab completion");
 			CustomCommand child = getChildrenByName(args[0]);
 			if (child == null) return null; //no child to process tab complete
-
+			System.out.println("sending tab completion processing to child command");
 			return getChildrenByName(args[0]).onTabComplete(sender, command, label, removeFirst(args)); //child processes tab complete
 		}
 
@@ -250,6 +256,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 			for (String s : commands.getAliases())
 				if (s.indexOf(args[0]) == 0) possibleCompletions.add(s);
 		}
+		System.out.println("possible completions " + possibleCompletions);
 		return possibleCompletions;
 	}
 	
@@ -490,7 +497,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	 * @return aliases of this command
 	 */
 	public List<String> getAliases() { //todo figure out if we can add aliases to here and not to base command
-		return this.baseCommand.getAliases();
+		return aliases;
 	}
 
 	/**

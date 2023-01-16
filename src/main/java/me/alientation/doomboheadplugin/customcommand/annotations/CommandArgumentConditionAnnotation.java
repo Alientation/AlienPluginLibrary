@@ -8,6 +8,15 @@ import java.lang.annotation.Target;
 
 @Retention(RUNTIME)
 @Target({ METHOD})
-public @interface CommandConditionAnnotation {
+public @interface CommandArgumentConditionAnnotation {
 
+    Type type() default Type.STRING;
+
+    enum Type {
+        INTEGER, STRING, CHARACTER, FLOAT;
+
+        public boolean isValid(String arg) {
+            return true;
+        }
+    }
 }

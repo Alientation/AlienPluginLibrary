@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestCustomCommand extends CustomCommandAPI {
-    @CommandAnnotation(commandID = "help", commandName = "help")
-    @CommandDescriptionAnnotation("Help Command")
-    @CommandAliasAnnotation("helpme")
+    @CommandAnnotation(commandID = "help", commandName = "help",
+            commandDescription = "Help Command",
+            commandAliases = {"helpme"})
     @PermissionAnnotation(permission = "help", required = false)
     public boolean helpCommand(CommandSender sender, Command cmd, String label, String[] args) {
         sender.sendMessage("No help for you loser");
@@ -35,8 +35,7 @@ public class TestCustomCommand extends CustomCommandAPI {
     }
 
 
-    @CommandAnnotation(commandID = "help.hello", commandName = "hello")
-    @CommandAliasAnnotation("hi")
+    @CommandAnnotation(commandID = "help.hello", commandName = "hello", commandAliases = {"hi"})
     @PermissionAnnotation(permission = "help",required=false)
     public boolean helpHelloCommand(CommandSender sender, Command cmd, String label, String[] args) {
         sender.sendMessage("hi");

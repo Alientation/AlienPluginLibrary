@@ -14,4 +14,7 @@ import java.lang.annotation.Target;
 public @interface CommandAnnotation {
 	String commandName();
 	String commandID();
+	String[] commandAliases() default {};
+	String commandDescription() default "";
+	String commandUsage() default "";
 }

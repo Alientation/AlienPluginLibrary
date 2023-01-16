@@ -61,32 +61,21 @@ public class CustomCommandAPI {
 
 			//annotated command method, gets annotations
 			CommandAnnotation commandAnnotation = method.getAnnotation(CommandAnnotation.class);
-			CommandAliasAnnotation[] aliasesAnnotations = method.getAnnotationsByType(CommandAliasAnnotation.class);
-			CommandDescriptionAnnotation descriptionAnnotation = method.getAnnotation(CommandDescriptionAnnotation.class);
 			PermissionAnnotation[] permissionAnnotations = method.getAnnotationsByType(PermissionAnnotation.class);
-			CommandUsageAnnotation usageAnnotation = method.getAnnotation(CommandUsageAnnotation.class);
 
-			//loads command name and id from annotation todo throw error if they arent present
 			String commandName = commandAnnotation.commandName();
 			String commandID = commandAnnotation.commandID();
 
-			//loads aliases from annotation
-			List<String> commandAliases = new ArrayList<>();
-			for (CommandAliasAnnotation aliasesAnnotation : aliasesAnnotations) commandAliases.add(aliasesAnnotation.value());
+			List<String> commandAliases = new ArrayList<>(Arrays.asList(commandAnnotation.commandAliases()));
+			String commandDescription = commandAnnotation.commandDescription();
+			String commandUsage = commandAnnotation.commandUsage();
 
-			//loads the command description from annotation
-			String commandDescription = descriptionAnnotation != null ? descriptionAnnotation.value() : null;
-
-			//loads command permission from annotation
 			List<String> commandPermissions = new ArrayList<>();
 			List<Boolean> commandRequiredPermissions = new ArrayList<>();
 			for (PermissionAnnotation permissionAnnotation : permissionAnnotations) {
 				commandPermissions.add(permissionAnnotation.permission());
 				commandRequiredPermissions.add(permissionAnnotation.required());
 			}
-
-			//loads command usage from annotations
-			String commandUsage = usageAnnotation != null ? usageAnnotation.value() : null;
 
 			//maps method to command pathway
 			this.methodMap.put("@commandAnnotation@" + commandAnnotation.commandID(), method);

@@ -12,7 +12,10 @@ import org.jetbrains.annotations.NotNull;
  * Links the BukkitCommand to CustomCommand so that whenever that interactions with this command will be forwarded to the corresponding CustomCommand
  */
 public class BaseCommand extends BukkitCommand {
+	//whether this command is still active
 	private boolean exists;
+
+	//the linked custom command that overrides this object's functionality
 	private CustomCommand commandExecutor;
 
 	/**

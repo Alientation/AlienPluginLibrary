@@ -13,8 +13,11 @@ import org.jetbrains.annotations.NotNull;
  * Manages CustomCommands
  */
 public class CustomCommandManager {
-	
+
+	//mapping of the command id to the command object
 	private final Map<String,CustomCommand> CUSTOM_COMMAND_MAP;
+
+	//plugin where the commands are situated in
 	private final JavaPlugin plugin;
 	
 	/**
@@ -33,32 +36,42 @@ public class CustomCommandManager {
 	 * @param command The target command to be registered
 	 */
 	public void mapCommand(CustomCommand command) {
-		this.CUSTOM_COMMAND_MAP.put(command.getId(),command); //maps the command
+		//maps the command
+		this.CUSTOM_COMMAND_MAP.put(command.getId(),command);
 
-		String[] parts = command.getId().split("\\."); //breaks the unique identifier (help.list -> [help,list]
+		//breaks the unique identifier (help.list -> [help,list]
+		String[] parts = command.getId().split("\\.");
 		System.out.println(command.getId() + " \n" + Arrays.toString(parts));
 
-		StringBuilder cmdPath = new StringBuilder(parts[0]); //current command pathway
+		//current command pathway
+		StringBuilder cmdPath = new StringBuilder(parts[0]);
 
 		//builds missing parts of the command tree (parent and children)
-		CustomCommand head = this.CUSTOM_COMMAND_MAP.get(cmdPath.toString()); //gets custom command at current pathway
-		if (head == null) { //if the custom command hasn't been initiated, initialize it
+		//gets custom command at current pathway
+		CustomCommand head = this.CUSTOM_COMMAND_MAP.get(cmdPath.toString());
+
+		//if the custom command hasn't been initiated, initialize it
+		if (head == null) {
 			head = CustomCommand.Builder.newInstance().id(cmdPath.toString()).name(cmdPath.toString()).manager(this).build();
 			this.CUSTOM_COMMAND_MAP.put(head.getId(), head);
 		}
 
-		CustomCommand child; //initialize children commands if not already initialized
+		//initialize children commands if not already initialized
+		CustomCommand child;
 		for (int i = 1; i < parts.length; i++) {
 			cmdPath.append(".").append(parts[i]);
 
+			//getting child
 			child = this.CUSTOM_COMMAND_MAP.get(cmdPath.toString());
 
+			//if child does not exist yet
 			if (child == null) {
 				//creates and adds child command
 				child = CustomCommand.Builder.newInstance().id(cmdPath.toString()).name(parts[i]).manager(this).build();
 				this.CUSTOM_COMMAND_MAP.put(child.getId(), child);
 			}
 
+			//moving down the link
 			head.addChildCommand(child);
 			child.setParent(head);
 			head = child;
@@ -79,29 +92,33 @@ public class CustomCommandManager {
 	 * Registers commands associated in the custom command map using reflection to link with Bukkit's command map
 	 */
 	public void registerCommand() throws PluginNotFoundException {
+		//todo figure out if the plugin is a necessary component
 		if (this.plugin == null) throw new PluginNotFoundException("The plugin has not yet been registered to the manager");
 
-		this.CUSTOM_COMMAND_MAP.forEach((key,value) -> {
-			if (!value.isParent()) return;
+		//iterate through each command already loaded in the map and register them
+		this.CUSTOM_COMMAND_MAP.forEach((commandID,commandMethod) -> {
+			//not the parent command (it by itself is not a complete command, there are arguments to it that are required)
+			if (!commandMethod.isParent()) return;
 
-			//System.out.println("COMMAND >>> " + value.getCommandName());
+			//registering command to the bukkit command map
+			System.out.println("COMMAND >>> " + commandMethod.getCommandName());
 			Field bukkitCommandMap;
 			try {
 				bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap"); //Bukkit's command mappings
 				bukkitCommandMap.setAccessible(true);
 				CommandMap commandMap = ((CommandMap) bukkitCommandMap.get(Bukkit.getServer()));
 
-				if (!(commandMap.getCommand(key) instanceof BaseCommand)) { //todo throw error instead
-					System.out.println(key + " is an invalid command as it isn't an instance of BaseCommand");
+				//not the correct command type
+				if (!(commandMap.getCommand(commandID) instanceof BaseCommand)) { //todo throw error instead
+					System.out.println(commandID + " is an invalid command as it isn't an instance of BaseCommand");
 					return;
 				}
 
-				((BaseCommand) Objects.requireNonNull(commandMap.getCommand(key))).setExecutor(value);
-
+				//registers the executing command method to the command
+				((BaseCommand) Objects.requireNonNull(commandMap.getCommand(commandID))).setExecutor(commandMethod);
 			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
-
 		});
 	}
 

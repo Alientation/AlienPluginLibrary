@@ -10,9 +10,9 @@ import java.lang.annotation.Target;
 @Target({ METHOD})
 public @interface CommandArgumentConditionAnnotation {
 
-    String matchType() default "str";
+    String matchType() default "str"; //argument's type
 
-    String matchCondition() default ""; //probably just use regex matching
+    String[] matchCondition() default {}; //custom condition checking
 
     /**
      * Type identifiers

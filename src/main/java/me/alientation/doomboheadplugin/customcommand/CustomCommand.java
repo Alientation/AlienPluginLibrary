@@ -2,6 +2,7 @@ package me.alientation.doomboheadplugin.customcommand;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 import me.alientation.doomboheadplugin.customcommand.events.CommandCallAttemptEvent;
@@ -371,6 +372,9 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 
 		if (methodObject.getMethodMap().get("@tabAnnotation@" + this.getId()) != method)
 			throw new InvalidMethodException("Method is not contained within the supplied methodObject > " + method);
+
+		if (method.getReturnType() != List.class) //todo create reflection library that can handle edge cases like if it was a subclass
+			throw new InvalidMethodException("Method does not have the correct return type. Required List<String>");
 
 		this.tabMethod = method;
 		this.tabMethodContainer = methodObject;

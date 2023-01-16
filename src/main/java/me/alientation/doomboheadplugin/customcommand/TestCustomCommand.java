@@ -43,7 +43,7 @@ public class TestCustomCommand extends CustomCommandAPI {
     }
 
 
-    @CommandTabAnnotation(commandID = "help.hello", commandName = "hello")
+    @CommandTabAnnotation(id = "help.hello", name = "hello")
     public List<String> helpHelloTab(CommandSender sender, Command cmd, String label, String[] args) {
         List<String> list = new ArrayList<>();
         list.add("SIRI");

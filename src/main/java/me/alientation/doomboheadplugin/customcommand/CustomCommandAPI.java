@@ -51,11 +51,11 @@ public class CustomCommandAPI {
 			//annotated tab complete method
 			if (method.isAnnotationPresent(CommandTabAnnotation.class)) {
 				CommandTabAnnotation tabAnnotation = method.getAnnotation(CommandTabAnnotation.class);
-				this.methodMap.put("@tabAnnotation@" + tabAnnotation.commandID(), method);
-				CustomCommand command = this.getCommand(tabAnnotation.commandID(), tabAnnotation.commandName());
+				this.methodMap.put("@tabAnnotation@" + tabAnnotation.id(), method);
+				CustomCommand command = this.getCommand(tabAnnotation.id(), tabAnnotation.name());
 				command.validateTabMethod(method, this);
 
-				System.out.println("Registering Command Tab Method " + this.getCommand(tabAnnotation.commandID(), tabAnnotation.commandName()));
+				System.out.println("Registering Command Tab Method " + this.getCommand(tabAnnotation.id(), tabAnnotation.name()));
 				continue;
 			}
 

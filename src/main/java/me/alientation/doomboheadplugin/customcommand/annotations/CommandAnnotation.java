@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Command Name and ID
+ * Base annotation for a command executor method
  */
 @Retention(RUNTIME)
 @Target({METHOD})

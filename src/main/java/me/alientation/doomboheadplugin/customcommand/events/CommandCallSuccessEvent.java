@@ -8,7 +8,7 @@ public class CommandCallSuccessEvent extends Event{
 	
 	private static final HandlerList HANDLER = new HandlerList();
 	
-	private CustomCommand commandCalled;
+	private final CustomCommand commandCalled;
 	
 	public CommandCallSuccessEvent(CustomCommand command) {
 		this.commandCalled = command;

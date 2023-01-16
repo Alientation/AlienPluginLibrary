@@ -10,7 +10,7 @@ public class CommandCallAttemptEvent extends Event implements Cancellable{
 	private static final HandlerList HANDLER = new HandlerList();
 	private boolean isCancelled;
 	
-	private CustomCommand commandCalled;
+	private final CustomCommand commandCalled;
 	
 	public CommandCallAttemptEvent(CustomCommand command) {
 		this.commandCalled = command;

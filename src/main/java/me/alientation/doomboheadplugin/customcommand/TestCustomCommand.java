@@ -10,9 +10,11 @@ import java.util.List;
 public class TestCustomCommand extends CustomCommandAPI {
     @CommandAnnotation(id = "help", name = "help",
             description = "Help Command",
+            usage = "/help",
             aliases = {"helpme"})
     @PermissionAnnotation(permission = "help", required = false)
     public boolean helpCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (args.length != 0) return false;
         sender.sendMessage("No help for you loser");
         return true;
     }

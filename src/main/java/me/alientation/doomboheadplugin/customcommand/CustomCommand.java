@@ -362,7 +362,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	 * @return whether the command should print out the usage description
 	 */
 	public boolean commandCallAttemptSuccess(CommandSender sender, Command command, String label, String[] args) {
-		return false;
+		return true;
 	}
 	
 	/**

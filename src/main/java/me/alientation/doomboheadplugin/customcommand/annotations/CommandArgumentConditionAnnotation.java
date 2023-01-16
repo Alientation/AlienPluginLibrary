@@ -10,13 +10,28 @@ import java.lang.annotation.Target;
 @Target({ METHOD})
 public @interface CommandArgumentConditionAnnotation {
 
-    Type type() default Type.STRING;
+    String matchType() default "str";
 
+    String matchCondition() default ""; //probably just use regex matching
+
+    /**
+     * Type identifiers
+     */
     enum Type {
-        INTEGER, STRING, CHARACTER, FLOAT;
+        INTEGER("int"), STRING("str"), CHARACTER("ch"), FLOAT("f");
 
-        public boolean isValid(String arg) {
-            return true;
+        final String type;
+        Type(String type) {
+            this.type = type;
+        }
+
+        public String getType() {
+            return this.type;
+        }
+
+        @Override
+        public String toString() {
+            return this.type;
         }
     }
 }

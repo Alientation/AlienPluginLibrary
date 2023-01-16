@@ -14,7 +14,8 @@ import java.lang.annotation.Target;
 @Target(FIELD)
 @Repeatable(CommandArgumentAnnotations.class)
 public @interface CommandArgumentAnnotation {
-    CommandArgumentConditionAnnotation condition();
+    String name();
+    CommandArgumentConditionAnnotation condition() default @CommandArgumentConditionAnnotation();
     String description() default "";
     String usage() default "";
 

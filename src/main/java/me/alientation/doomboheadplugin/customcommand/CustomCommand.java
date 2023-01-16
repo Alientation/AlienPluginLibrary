@@ -25,8 +25,13 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	//A unique identifier for the specific command. For example the command /help list -> help.list
 	private final String id;
 
+	private final String name;
+
 	//The parent command. For example the command /help list -> help
 	private CustomCommand parent;
+
+	//Aliases to the command
+	private final List<String> aliases;
 
 	//The sub commands of this parent command. All sub commands inherit the same permission requirements as the parent command
 	private final Set<CustomCommand> children;
@@ -55,12 +60,13 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 
 	public static class Builder {
 		private CustomCommandManager manager;
-		private String id;
-		private Collection<String> permissions, requiredPermissions;
+		private String id, name;
+		private Collection<String> aliases, permissions, requiredPermissions;
 
 		private Builder() {
-			permissions = new HashSet<>();
+			aliases = new ArrayList<>();
 			requiredPermissions = new HashSet<>();
+			permissions = new HashSet<>();
 		}
 		public static Builder newInstance() {
 			return new Builder();
@@ -76,18 +82,44 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 			return this;
 		}
 
+		public Builder name(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public Builder alias(String alias) {
+			this.aliases.add(alias);
+			return this;
+		}
+
+		public Builder aliases(Collection<String> aliases) {
+			this.aliases.addAll(aliases);
+			return this;
+		}
+
+		public Builder permission(String permission) {
+			this.permissions.add(permission);
+			return this;
+		}
+
 		public Builder permissions(Collection<String> permissions) {
-			this.permissions = permissions;
+			this.permissions.addAll(permissions);
 			return this;
 		}
 
 		public Builder requiredPermissions(Collection<String> requiredPermissions) {
-			this.requiredPermissions = requiredPermissions;
+			this.requiredPermissions.addAll(requiredPermissions);
+			return this;
+		}
+
+		public Builder requiredPermission(String requiredPermission) {
+			this.requiredPermissions.add(requiredPermission);
 			return this;
 		}
 
 		public void verify() {
 			if (id == null) throw new IllegalStateException("id can't be null");
+			if (name == null) throw new IllegalStateException("name can't be null");
 		}
 
 		public CustomCommand build() {
@@ -103,6 +135,8 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	 */
 	public CustomCommand(Builder builder) {
 		this.id = builder.id;
+		this.name = builder.name;
+		this.aliases = (List<String>) builder.aliases;
 		this.permissions = new HashSet<>();
 		this.requiredPermissions = new HashSet<>();
 		this.children = new HashSet<>();
@@ -455,7 +489,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	 *
 	 * @return aliases of this command
 	 */
-	public List<String> getAliases() {
+	public List<String> getAliases() { //todo figure out if we can add aliases to here and not to base command
 		return this.baseCommand.getAliases();
 	}
 
@@ -492,7 +526,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	 * @return name of the command
 	 */
 	public String getCommandName() {
-		return this.baseCommand.getName();
+		return this.name;
 	}
 
 	/**

@@ -52,10 +52,10 @@ public class CustomCommandAPI {
 			if (method.isAnnotationPresent(CommandTabAnnotation.class)) {
 				CommandTabAnnotation tabAnnotation = method.getAnnotation(CommandTabAnnotation.class);
 				this.methodMap.put("@tabAnnotation@" + tabAnnotation.commandID(), method);
-				CustomCommand command = this.getCommand(tabAnnotation.commandID());
+				CustomCommand command = this.getCommand(tabAnnotation.commandID(), tabAnnotation.commandName());
 				command.validateTabMethod(method, this);
 
-				System.out.println("Registering Command Tab Method " + this.getCommand(tabAnnotation.commandID()));
+				System.out.println("Registering Command Tab Method " + this.getCommand(tabAnnotation.commandID(), tabAnnotation.commandName()));
 				continue;
 			}
 
@@ -67,8 +67,8 @@ public class CustomCommandAPI {
 			CommandUsageAnnotation usageAnnotation = method.getAnnotation(CommandUsageAnnotation.class);
 
 			//loads command name and id from annotation todo throw error if they arent present
-			String commandName = commandAnnotation != null ? commandAnnotation.commandName() : null;
-			String commandID = commandAnnotation != null ? commandAnnotation.commandID() : null;
+			String commandName = commandAnnotation.commandName();
+			String commandID = commandAnnotation.commandID();
 
 			//loads aliases from annotation
 			List<String> commandAliases = new ArrayList<>();
@@ -89,16 +89,15 @@ public class CustomCommandAPI {
 			String commandUsage = usageAnnotation != null ? usageAnnotation.value() : null;
 
 			//maps method to command pathway
-			assert commandAnnotation != null;
 			this.methodMap.put("@commandAnnotation@" + commandAnnotation.commandID(), method);
 
 			//instantiates the custom command
-			CustomCommand command = this.getCommand(commandID);
+			CustomCommand command = this.getCommand(commandID, commandName);
 
 			for (int i = 0; i < commandPermissions.size(); i++)
 				command.addPermission(commandPermissions.get(i),commandRequiredPermissions.get(i));
 
-			System.out.println("Registering Command Method " + this.getCommand(commandAnnotation.commandID()));
+			System.out.println("Registering Command Method " + this.getCommand(commandID, commandName));
 
 			if (command.isParent()) {
 				System.out.println("^ is a parent command");
@@ -127,12 +126,13 @@ public class CustomCommandAPI {
 	 * @param commandID	command pathway
 	 * @return Custom Command
 	 */
-	private CustomCommand getCommand(String commandID) {
+	private CustomCommand getCommand(String commandID, String commandName) {
 		CustomCommand command = this.commandManager.getCustomCommandMap().get(commandID);
 
 		if (command == null) {
 			command = CustomCommand.Builder.newInstance()
 					.id(commandID)
+					.name(commandName)
 					.manager(this.commandManager)
 					.build();
 			this.commandManager.mapCommand(command);

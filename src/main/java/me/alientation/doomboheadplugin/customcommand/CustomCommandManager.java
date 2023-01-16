@@ -36,14 +36,14 @@ public class CustomCommandManager {
 		this.CUSTOM_COMMAND_MAP.put(command.getId(),command); //maps the command
 
 		String[] parts = command.getId().split("\\."); //breaks the unique identifier (help.list -> [help,list]
-		//System.out.println(command.getCommandID() + " \n" + Arrays.toString(parts));
+		System.out.println(command.getId() + " \n" + Arrays.toString(parts));
 
 		StringBuilder cmdPath = new StringBuilder(parts[0]); //current command pathway
 
 		//builds missing parts of the command tree (parent and children)
 		CustomCommand head = this.CUSTOM_COMMAND_MAP.get(cmdPath.toString()); //gets custom command at current pathway
 		if (head == null) { //if the custom command hasn't been initiated, initialize it
-			head = CustomCommand.Builder.newInstance().id(cmdPath.toString()).manager(this).build();
+			head = CustomCommand.Builder.newInstance().id(cmdPath.toString()).name(cmdPath.toString()).manager(this).build();
 			this.CUSTOM_COMMAND_MAP.put(head.getId(), head);
 		}
 
@@ -52,11 +52,13 @@ public class CustomCommandManager {
 			cmdPath.append(".").append(parts[i]);
 
 			child = this.CUSTOM_COMMAND_MAP.get(cmdPath.toString());
-			if (child != null) continue;
 
-			//creates and adds child command
-			child = CustomCommand.Builder.newInstance().id(cmdPath.toString()).manager(this).build();
-			this.CUSTOM_COMMAND_MAP.put(child.getId(), child);
+			if (child == null) {
+				//creates and adds child command
+				child = CustomCommand.Builder.newInstance().id(cmdPath.toString()).name(parts[i]).manager(this).build();
+				this.CUSTOM_COMMAND_MAP.put(child.getId(), child);
+			}
+
 			head.addChildCommand(child);
 			child.setParent(head);
 			head = child;

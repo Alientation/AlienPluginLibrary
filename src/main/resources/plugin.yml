@@ -4,3 +4,17 @@ main: me.alientation.doomboheadplugin.DoomboheadPlugin
 api-version: 1.19
 authors: [ Alientation ]
 description: Plugin for the Doombohead Server
+
+permissions:
+  help:
+    description: Allows help command
+    default: true
+  help.list:
+    description: Allows help list command
+    default: true
+  help.add:
+    description: Allows help edit command
+    default: op
+  admin:
+    description: become admin
+    default: true

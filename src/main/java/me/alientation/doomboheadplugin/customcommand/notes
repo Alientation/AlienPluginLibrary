@@ -1,0 +1,2 @@
+Link command permissions with custom permission
+There are some attributes (description, usage) that are part of base command but not custom command

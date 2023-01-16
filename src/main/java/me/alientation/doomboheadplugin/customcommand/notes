@@ -1,5 +1,4 @@
 Link command permissions with custom permission
-There are some attributes (description, usage) that are part of base command but not custom command
 add more options/settings to custom command (whether or not to show all available command even if sender does not have permissions, etc)
 Log tools (probably separate)
 More annotations

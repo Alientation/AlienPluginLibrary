@@ -2,7 +2,6 @@ package me.alientation.doomboheadplugin.customcommand;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 import me.alientation.doomboheadplugin.customcommand.events.CommandCallAttemptEvent;
@@ -17,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Class for storing information regarding a CustomCommand and forwarding functionality to reflected methods
+ * todo allow for changing attributes of command (name, description, usage) by deleting old command from map and making a new command
  */
 public class CustomCommand implements CommandExecutor, TabCompleter {
 	//A unique identifier for the specific command. For example the command /help list -> help.list
@@ -25,18 +25,22 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	//name of the command /help list -> list
 	private final String name;
 
-	//The parent command. For example the command /help list -> help
-	private CustomCommand parent;
+	private final String description;
+
+	private final String usage;
 
 	//Aliases to the command
 	private final List<String> aliases;
 
-	//The sub commands of this parent command. All sub commands inherit the same permission requirements as the parent command
-	private final Set<CustomCommand> children;
-
 	//permissions for the current command, TODO link it with the CustomPermission
 	private final Set<String> permissions;
 	private final Set<String> requiredPermissions;
+
+	//The parent command. For example the command /help list -> help
+	private CustomCommand parent;
+
+	//The sub commands of this parent command. All sub commands inherit the same permission requirements as the parent command
+	private final Set<CustomCommand> children;
 
 	//the methods linked to the custom command
 	private Method commandMethod;
@@ -60,7 +64,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	 */
 	public static class Builder {
 		private CustomCommandManager manager;
-		private String id, name;
+		private String id, name, description, usage;
 		private final Collection<String> aliases, permissions, requiredPermissions;
 
 		private Builder() {
@@ -84,6 +88,16 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 
 		public Builder name(String name) {
 			this.name = name;
+			return this;
+		}
+
+		public Builder description(String description) {
+			this.description = description;
+			return this;
+		}
+
+		public Builder usage(String usage) {
+			this.usage = usage;
 			return this;
 		}
 
@@ -136,6 +150,8 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	public CustomCommand(Builder builder) {
 		this.id = builder.id;
 		this.name = builder.name;
+		this.description = builder.description;
+		this.usage = builder.usage;
 		this.aliases = (List<String>) builder.aliases;
 		this.permissions = new HashSet<>();
 		this.requiredPermissions = new HashSet<>();
@@ -268,8 +284,8 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		List<String> possibleCompletions = new ArrayList<>();
 		for (CustomCommand commands : this.children) {
 			//adding child command names
-			if (commands.hasPermissions(sender) && commands.getCommandName().indexOf(args[0]) == 0)
-				possibleCompletions.add(commands.getCommandName());
+			if (commands.hasPermissions(sender) && commands.getName().indexOf(args[0]) == 0)
+				possibleCompletions.add(commands.getName());
 
 			//don't show aliases on tab completion
 			if (!showAliasesInTabCompletion) continue;
@@ -410,14 +426,119 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	}
 
 	/**
-	 * Add a single permission
+	 * Gets command ID
 	 *
-	 * @param permission permission to be added to this command
+	 * @return command ID (command pathway)
 	 */
-	public void addPermission(String permission) {
-		this.permissions.add(permission);
+	public String getId() {
+		return this.id;
 	}
-	
+
+	/**
+	 * TODO Updates command id (pathway)
+	 *
+	 * @param id new command id
+	 * @throws Exception still in development
+	 */
+	public void setId(String id) throws Exception {
+		throw new Exception("DON'T USE THIS RIGHT NOW");
+	}
+
+	/**
+	 * Gets name of the command
+	 *
+	 * @return name of the command
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * TODO Updates command name
+	 *
+	 * @param  name new command name
+	 * @throws Exception still in development
+	 */
+	public void setName(String name) throws Exception {
+		throw new Exception("DON'T USE THIS RIGHT NOW");
+	}
+
+	/**
+	 * Gets the command description
+	 *
+	 * @return command description
+	 */
+	public String getDescription() {
+		return this.description;
+	}
+
+	/**
+	 * TODO updates command description
+	 *
+	 * @param description new command description
+	 * @throws Exception still in development
+	 */
+	public void setDescription(String description) throws Exception {
+		throw new Exception("DON'T USE THIS RIGHT NOW");
+	}
+
+	/**
+	 * Gets the command usage
+	 *
+	 * @return command usage
+	 */
+	public String getUsage() {
+		return this.usage;
+	}
+
+	/**
+	 * TODO updates command usage
+	 *
+	 * @param usage new command usage
+	 * @throws Exception still in development
+	 */
+	public void setUsage(String usage) throws Exception {
+		throw new Exception("DON'T USE THIS RIGHT NOW");
+	}
+
+	/**
+	 * Gets aliases of this command
+	 *
+	 * @return aliases of this command
+	 */
+	public List<String> getAliases() {
+		return aliases;
+	}
+
+	/**
+	 * TODO clears command aliases
+	 *
+	 * @throws Exception still in development
+	 */
+	public void clearAliases() throws Exception {
+		throw new Exception("DON'T USE THIS RIGHT NOW");
+	}
+
+	/**
+	 * TODO add command alias
+	 *
+	 * @param alias new command alias
+	 * @throws Exception still in development
+	 */
+	public void addAlias(String alias) throws Exception {
+		throw new Exception("DON'T USE THIS RIGHT NOW");
+	}
+
+	/**
+	 * TODO remove command alias
+	 *
+	 * @param alias removed command alias
+	 * @throws Exception still in development
+	 */
+	public void removeAlias(String alias) throws Exception {
+		throw new Exception("DON'T USE THIS RIGHT NOW");
+	}
+
 	/**
 	 * Assigns the permission to the appropriate container
 	 *
@@ -428,142 +549,40 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		if (isRequired) addRequiredPermission(permission);
 		else addPermission(permission);
 	}
-	
-	/**
-	 * Add a single required permission to this command
-	 *
-	 * @param permission required permission to be added
-	 */
-	public void addRequiredPermission(String permission) {
-		this.requiredPermissions.add(permission);
-	}
-	
-	/**
-	 * Adds permissions to the command
-	 *
-	 * @param permissions permissions to be added
-	 */
-	public void addPermissions(@NotNull Collection<String> permissions) {
-		for (String perm : permissions) addPermission(perm);
-	}
-	
-	/**
-	 * Adds required permissions to the command
-	 *
-	 * @param permissions required permissions to be added
-	 */
-	public void addRequiredPermissions(@NotNull Collection<String> permissions) {
-		for (String perm : permissions) addRequiredPermission(perm);
-	}
-	
-	/**
-	 * Kills the previous baseCommand as a safety check and sets a new one
-	 *
-	 * @param baseCommand new baseCommand
-	 */
-	public void setBaseCommand(BaseCommand baseCommand) {
-		//safety check
-		if (this.baseCommand != null) this.baseCommand.kill();
-		if (baseCommand.getCommandExecutor() != null) baseCommand.getCommandExecutor().baseCommand = null;
-
-		this.baseCommand = baseCommand;
-		this.baseCommand.setExecutor(this);
-	}
-
-	/**
-	 * Adds child command
-	 *
-	 * @param child child to be added
-	 */
-	public void addChildCommand(CustomCommand child) {
-		this.children.add(child);
-		child.parent = this;
-	}
-
-	/**
-	 * Gets child command by name
-	 *
-	 * @param childName name of child command
-	 * @return child command
-	 */
-	public CustomCommand getChildrenByName(String childName) {
-		for (CustomCommand cmd : this.children)
-			if (cmd.getCommandName().equals(childName) || cmd.getAliases().contains(childName)) return cmd;
-		return null;
-	}
-
-	/**
-	 * Removes child command
-	 *
-	 * @param child child command
-	 */
-	public void removeChildCommand(CustomCommand child) {
-		this.children.remove(child);
-		child.parent = null;
-	}
-
-	/**
-	 * Removes child command by name
-	 *
-	 * @param childName name of child command
-	 */
-	public void removeChildCommand(String childName) {
-		removeChildCommand(getChildrenByName(childName));
-	}
-
-
-	/**
-	 * Gets aliases of this command
-	 *
-	 * @return aliases of this command
-	 */
-	public List<String> getAliases() { //todo figure out if we can add aliases to here and not to base command
-		return aliases;
-	}
-
-	/**
-	 * Returns whether tab completion shows aliases
-	 *
-	 * @return whether tab completion shows aliases
-	 */
-	public boolean showAliasesInTabCompletion() {
-		return showAliasesInTabCompletion;
-	}
-
-	/**
-	 * Sets whether tab completion shows aliases
-	 *
-	 * @param showAliasesInTabCompletion whether tab completion shows aliases
-	 */
-	public void setShowAliasesInTabCompletion(boolean showAliasesInTabCompletion) {
-		this.showAliasesInTabCompletion = showAliasesInTabCompletion;
-	}
-
-	/**
-	 * Gets command ID
-	 *
-	 * @return command ID (command pathway)
-	 */
-	public String getId() {
-		return this.id;
-	}
-
-	/**
-	 * Gets name of the command
-	 *
-	 * @return name of the command
-	 */
-	public String getCommandName() {
-		return this.name;
-	}
 
 	/**
 	 * Gets the permissions of this command
 	 *
 	 * @return permission list
 	 */
-	public Set<String> getPermission() {
+	public Set<String> getPermissions() {
 		return this.permissions;
+	}
+
+	/**
+	 * Clears the permissions of this command
+	 */
+	public void clearPermissions() {
+		for (String permission : permissions)
+			removePermission(permission);
+	}
+
+	/**
+	 * Add a single permission
+	 *
+	 * @param permission permission to be added to this command
+	 */
+	public void addPermission(String permission) {
+		this.permissions.add(permission);
+	}
+
+	/**
+	 * Removes permission from this command
+	 *
+	 * @param permission permission to be removed from this command
+	 */
+	public void removePermission(String permission) {
+		this.permissions.remove(permission);
 	}
 
 	/**
@@ -571,8 +590,34 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	 *
 	 * @return required permission list
 	 */
-	public Set<String> getRequiredPermission() {
+	public Set<String> getRequiredPermissions() {
 		return this.requiredPermissions;
+	}
+
+	/**
+	 * Clears the required permissions of this command
+	 */
+	public void clearRequiredPermissions() {
+		for (String requiredPermission : requiredPermissions)
+			removeRequiredPermission(requiredPermission);
+	}
+
+	/**
+	 * Add a single required permission
+	 *
+	 * @param requiredPermission required permission to be added to this command
+	 */
+	public void addRequiredPermission(String requiredPermission) {
+		this.requiredPermissions.add(requiredPermission);
+	}
+
+	/**
+	 * Removes required permission from this command
+	 *
+	 * @param requiredPermissions required permission to be removed from this command
+	 */
+	public void removeRequiredPermission(String requiredPermissions) {
+		this.requiredPermissions.remove(requiredPermissions);
 	}
 
 	/**
@@ -614,12 +659,94 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	}
 
 	/**
-	 * Returns whether there is a linked method to execute on action
+	 * Adds child command
 	 *
-	 * @return whether there is a linked method to execute on action
+	 * @param child child to be added
 	 */
-	public boolean hasMethod() {
-		return this.commandMethod != null;
+	public void addChildCommand(CustomCommand child) {
+		this.children.add(child);
+		child.parent = this;
+	}
+
+	/**
+	 * Gets child command by name
+	 *
+	 * @param childName name of child command
+	 * @return child command
+	 */
+	public CustomCommand getChildrenByName(String childName) {
+		for (CustomCommand cmd : this.children)
+			if (cmd.getName().equals(childName) || cmd.getAliases().contains(childName)) return cmd;
+		return null;
+	}
+
+	/**
+	 * Removes child command
+	 *
+	 * @param child child command
+	 */
+	public void removeChildCommand(CustomCommand child) {
+		this.children.remove(child);
+		child.parent = null;
+	}
+
+	/**
+	 * Gets the command execute method
+	 *
+	 * @return command execute method
+	 */
+	public Method getCommandMethod() {
+		return this.commandMethod;
+	}
+
+	/**
+	 * Gets the tab complete method
+	 *
+	 * @return tab complete method
+	 */
+	public Method getTabMethod() {
+		return this.tabMethod;
+	}
+
+	/**
+	 * Gets the class that contains the command execute method
+	 *
+	 * @return command execute method container
+	 */
+	public CustomCommandAPI getCommandMethodContainer() {
+		return this.commandMethodContainer;
+	}
+
+	/**
+	 * Gets the class that contains the tab complete method
+	 *
+	 * @return tab complete method container
+	 */
+	public CustomCommandAPI getTabMethodContainer() {
+		return this.tabMethodContainer;
+	}
+
+	/**
+	 * Gets the base command (the link to Bukkit)
+	 *
+	 * @return base command
+	 */
+	public BaseCommand getBaseCommand() {
+		return this.baseCommand;
+	}
+
+	/**
+	 * Kills the previous baseCommand as a safety check and sets a new one
+	 *
+	 * @param baseCommand new baseCommand
+	 */
+	public void setBaseCommand(BaseCommand baseCommand) {
+		//safety check
+		if (this.baseCommand != null) this.baseCommand.kill();
+		if (baseCommand.getCommandExecutor() != null) baseCommand.getCommandExecutor().baseCommand = null;
+
+		this.baseCommand = baseCommand;
+		this.baseCommand.setExecutor(this);
 	}
 
 	/**
@@ -632,13 +759,40 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	}
 
 	/**
+	 * Returns whether tab completion shows aliases
+	 *
+	 * @return whether tab completion shows aliases
+	 */
+	public boolean showAliasesInTabCompletion() {
+		return this.showAliasesInTabCompletion;
+	}
+
+	/**
+	 * Sets whether tab completion shows aliases
+	 *
+	 * @param showAliasesInTabCompletion whether tab completion shows aliases
+	 */
+	public void setShowAliasesInTabCompletion(boolean showAliasesInTabCompletion) {
+		this.showAliasesInTabCompletion = showAliasesInTabCompletion;
+	}
+
+	/**
+	 * Returns whether there is a linked method to execute on action
+	 *
+	 * @return whether there is a linked method to execute on action
+	 */
+	public boolean hasMethod() {
+		return this.commandMethod != null;
+	}
+
+	/**
 	 * Stringify the command with the name and id (full path)
 	 *
 	 * @return String representation of the command
 	 */
 	@Override
 	public String toString() {
-		return this.getCommandName() + "@" + this.id;
+		return this.getName() + "@" + this.id;
 	}
 	
 }

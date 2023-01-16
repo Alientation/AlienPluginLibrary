@@ -101,7 +101,7 @@ public class CustomCommandManager {
 			if (!commandMethod.isParent()) return;
 
 			//registering command to the bukkit command map
-			System.out.println("COMMAND >>> " + commandMethod.getCommandName());
+			System.out.println("COMMAND >>> " + commandMethod.getName());
 			Field bukkitCommandMap;
 			try {
 				bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap"); //Bukkit's command mappings

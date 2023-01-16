@@ -4,3 +4,4 @@ add more options/settings to custom command (whether or not to show all availabl
 Log tools (probably separate)
 More annotations
 Work on CommandArgumentAnnotation, ParameterFlagAnnotation, ParameterOptionalAnnotation
+Reflection library to easily compare parameter and return types if it matches

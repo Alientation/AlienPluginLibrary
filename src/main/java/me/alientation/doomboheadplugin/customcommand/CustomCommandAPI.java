@@ -4,7 +4,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import me.alientation.doomboheadplugin.customcommand.annotations.*;
+import me.alientation.doomboheadplugin.customcommand.annotations.arguments.CommandArgumentAnnotation;
+import me.alientation.doomboheadplugin.customcommand.annotations.arguments.CommandArgumentCustomConditionAnnotation;
+import me.alientation.doomboheadplugin.customcommand.annotations.commands.CommandAnnotation;
+import me.alientation.doomboheadplugin.customcommand.annotations.commands.CommandTabAnnotation;
+import me.alientation.doomboheadplugin.customcommand.annotations.permissions.PermissionAnnotation;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 
@@ -58,6 +62,24 @@ public class CustomCommandAPI {
 				System.out.println("Registering Command Tab Method " + this.getCommand(tabAnnotation.id(), tabAnnotation.name()));
 				continue;
 			}
+
+			//annotated command arguments
+			CommandArgumentAnnotation[] commandArgumentAnnotation = method.getAnnotationsByType(CommandArgumentAnnotation.class);
+
+			for (CommandArgumentAnnotation commandArgument : commandArgumentAnnotation) {
+				if (commandArgument.customCondition().matchConditionClass() == CommandArgumentCustomConditionAnnotation.BASE_CLASS) {
+					//not custom argument
+
+
+
+					continue;
+				}
+
+				//custom argument
+
+
+			}
+
 
 			//annotated command method, gets annotations
 			CommandAnnotation commandAnnotation = method.getAnnotation(CommandAnnotation.class);

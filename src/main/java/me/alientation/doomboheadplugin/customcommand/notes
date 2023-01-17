@@ -6,4 +6,3 @@ Work on ParameterFlagAnnotation, ParameterOptionalAnnotation
 Reflection library to easily compare parameter and return types if it matches
 Get usage (and possible description) to work. it does not  display it when the onCommand method returns false
 
-CommandArgumentAnnotation

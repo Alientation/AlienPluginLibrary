@@ -1,4 +1,4 @@
-package me.alientation.doomboheadplugin.customcommand.annotations;
+package me.alientation.doomboheadplugin.customcommand.annotations.permissions;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

@@ -1,4 +1,4 @@
-package me.alientation.doomboheadplugin.customcommand.annotations;
+package me.alientation.doomboheadplugin.customcommand.annotations.commands;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

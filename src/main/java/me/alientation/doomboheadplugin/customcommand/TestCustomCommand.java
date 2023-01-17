@@ -1,6 +1,8 @@
 package me.alientation.doomboheadplugin.customcommand;
 
-import me.alientation.doomboheadplugin.customcommand.annotations.*;
+import me.alientation.doomboheadplugin.customcommand.annotations.commands.CommandAnnotation;
+import me.alientation.doomboheadplugin.customcommand.annotations.commands.CommandTabAnnotation;
+import me.alientation.doomboheadplugin.customcommand.annotations.permissions.PermissionAnnotation;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 

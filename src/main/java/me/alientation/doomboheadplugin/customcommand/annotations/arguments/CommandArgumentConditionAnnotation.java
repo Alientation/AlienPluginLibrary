@@ -1,4 +1,4 @@
-package me.alientation.doomboheadplugin.customcommand.annotations;
+package me.alientation.doomboheadplugin.customcommand.annotations.arguments;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -11,9 +11,8 @@ import java.lang.annotation.Target;
  */
 @Retention(RUNTIME)
 @Target({ METHOD})
-public @interface CommandArgumentConditionAnnotation {
+public @interface CommandArgumentConditionAnnotation {//load these attributes into CustomCommand
 
-    String matchType() default "str"; //argument's type
-
+    String matchType() default ""; //argument's type
     String[] matchCondition() default {}; //custom condition checking
 }

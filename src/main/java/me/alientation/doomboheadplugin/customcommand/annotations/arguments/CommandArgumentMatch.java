@@ -1,4 +1,4 @@
-package me.alientation.doomboheadplugin.customcommand.annotations;
+package me.alientation.doomboheadplugin.customcommand.annotations.arguments;
 
 /**
  * Util to compute matches
@@ -12,6 +12,8 @@ package me.alientation.doomboheadplugin.customcommand.annotations;
 public class CommandArgumentMatch {
 
     /**
+     * Checks the argument against a match condition
+     * <p>
      *
      *
      * @param arg argument to be checked
@@ -23,7 +25,7 @@ public class CommandArgumentMatch {
     }
 
     /**
-     *
+     * Checks the argument against a match type
      *
      * @param arg argument to be checked
      * @param matchType Condition to be checked with

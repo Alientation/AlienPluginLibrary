@@ -1,8 +1,8 @@
 package me.alientation.doomboheadplugin.customgui.commands;
 
 import me.alientation.doomboheadplugin.customcommand.CustomCommandAPI;
-import me.alientation.doomboheadplugin.customcommand.annotations.CommandAnnotation;
-import me.alientation.doomboheadplugin.customcommand.annotations.PermissionAnnotation;
+import me.alientation.doomboheadplugin.customcommand.annotations.commands.CommandAnnotation;
+import me.alientation.doomboheadplugin.customcommand.annotations.permissions.PermissionAnnotation;
 import me.alientation.doomboheadplugin.customgui.CustomGUIManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

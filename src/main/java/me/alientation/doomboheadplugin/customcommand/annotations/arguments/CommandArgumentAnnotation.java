@@ -1,4 +1,4 @@
-package me.alientation.doomboheadplugin.customcommand.annotations;
+package me.alientation.doomboheadplugin.customcommand.annotations.arguments;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -16,6 +16,7 @@ import java.lang.annotation.Target;
 public @interface CommandArgumentAnnotation {
     String name();
     CommandArgumentConditionAnnotation condition() default @CommandArgumentConditionAnnotation();
+    CommandArgumentCustomConditionAnnotation customCondition() default @CommandArgumentCustomConditionAnnotation();
     String description() default "";
     String usage() default "";
 

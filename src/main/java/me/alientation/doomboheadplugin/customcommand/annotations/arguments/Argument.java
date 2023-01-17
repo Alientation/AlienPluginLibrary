@@ -12,12 +12,12 @@ public class Argument {
         this.matchCondition = matchCondition;
     }
 
-    public boolean doesMatchType(String argument) { //todo
-        return true;
+    public boolean doesMatchType(String argument) {
+        return CommandArgumentMatch.doesMatchType(argument,matchType);
     }
 
-    public boolean doesMatchCondition(String argument) { //todo
-        return true;
+    public boolean doesMatchCondition(String argument) {
+        return CommandArgumentMatch.doesMatchCondition(argument,matchType);
     }
 
     public String getName() {

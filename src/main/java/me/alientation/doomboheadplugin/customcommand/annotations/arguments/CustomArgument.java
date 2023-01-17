@@ -1,5 +1,7 @@
 package me.alientation.doomboheadplugin.customcommand.annotations.arguments;
 
+import me.alientation.doomboheadplugin.customcommand.exceptions.InvalidMethodException;
+
 import java.lang.reflect.Method;
 
 public class CustomArgument extends Argument {
@@ -17,6 +19,16 @@ public class CustomArgument extends Argument {
         this.matchTypeMethod = matchTypeMethod;
         this.matchConditionClass = matchConditionClass;
         this.matchConditionMethod = matchConditionMethod;
+
+        validateMethods();
+    }
+
+    public void validateMethods() { //todo allow for custom parameter feeding in (probably best to make use of the command parameter matching
+        if (matchTypeMethod.getParameterCount() != 1 || matchTypeMethod.getParameterTypes()[0] != String.class)
+            throw new InvalidMethodException("Command Argument MatchType method does not have the correct parameters. There should be only 1 parameter (String)");
+
+        if (matchConditionMethod.getParameterCount() != 1 || matchConditionMethod.getParameterTypes()[0] != String.class)
+            throw new InvalidMethodException("Command Argument MatchCondition method does not have the correct parameters. There should be only 1 parameter (String)");
     }
 
     @Override

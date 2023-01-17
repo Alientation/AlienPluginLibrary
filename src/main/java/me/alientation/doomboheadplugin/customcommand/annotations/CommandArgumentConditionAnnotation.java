@@ -6,6 +6,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * Details the conditions for the argument
+ */
 @Retention(RUNTIME)
 @Target({ METHOD})
 public @interface CommandArgumentConditionAnnotation {
@@ -13,25 +16,4 @@ public @interface CommandArgumentConditionAnnotation {
     String matchType() default "str"; //argument's type
 
     String[] matchCondition() default {}; //custom condition checking
-
-    /**
-     * Type identifiers
-     */
-    enum Type {
-        INTEGER("int"), STRING("str"), CHARACTER("ch"), FLOAT("f");
-
-        final String type;
-        Type(String type) {
-            this.type = type;
-        }
-
-        public String getType() {
-            return this.type;
-        }
-
-        @Override
-        public String toString() {
-            return this.type;
-        }
-    }
 }

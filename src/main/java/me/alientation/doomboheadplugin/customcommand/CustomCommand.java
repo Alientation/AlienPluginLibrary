@@ -233,6 +233,8 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		Bukkit.getPluginManager().callEvent(commandCallAttemptEvent);
 		System.out.println(command.getName() + " Command called with " + Arrays.toString(args) + " args");
 
+		//todo
+
 		//command call is cancelled
 		System.out.println("Checking if command call attempt event is cancelled");
 		if (commandCallAttemptEvent.isCancelled()) return !commandCallAttemptFail(sender,command,label,args);
@@ -693,36 +695,52 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		return this.manager;
 	}
 
-	public boolean showAliasesInTabCompletion() {
+	public boolean doesShowAliasesInTabCompletion() {
 		return this.showAliasesInTabCompletion;
 	}
 
-	public void setShowAliasesInTabCompletion(boolean showAliasesInTabCompletion) {
-		this.showAliasesInTabCompletion = showAliasesInTabCompletion;
+	public void hideAliasesInTabCompletion() {
+		this.showAliasesInTabCompletion = false;
+	}
+
+	public void showAliasesInTabCompletion() {
+		this.showAliasesInTabCompletion = true;
 	}
 
 	public boolean isVisible() {
 		return this.visible;
 	}
 
-	public void setVisible(boolean visible) {
-		this.visible = visible;
+	public void hide() {
+		this.visible = false;
+	}
+
+	public void show() {
+		this.visible = true;
 	}
 
 	public boolean isDisabled() {
 		return this.disabled;
 	}
 
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
+	public void disable() {
+		this.disabled = true;
+	}
+
+	public void unDisable() {
+		this.disabled = false;
 	}
 
 	public boolean doesIgnorePermissions() {
 		return this.ignorePermissions;
 	}
 
-	public void setIgnorePermissions(boolean ignorePermissions) {
-		this.ignorePermissions = ignorePermissions;
+	public void ignorePermissions() {
+		this.ignorePermissions = true;
+	}
+
+	public void checkPermissions() {
+		this.ignorePermissions = false;
 	}
 
 	public boolean hasMethod() {

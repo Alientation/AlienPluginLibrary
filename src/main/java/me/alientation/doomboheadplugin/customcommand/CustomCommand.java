@@ -13,6 +13,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -233,7 +234,8 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		Bukkit.getPluginManager().callEvent(commandCallAttemptEvent);
 		System.out.println(command.getName() + " Command called with " + Arrays.toString(args) + " args");
 
-		//todo
+		if (this.disabled) commandCallAttemptEvent.setCancelled(true);
+		System.out.println("Cancelled because command is disabled");
 
 		//command call is cancelled
 		System.out.println("Checking if command call attempt event is cancelled");
@@ -303,6 +305,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		System.out.println("Tab completion for " + command.getName() + " with " + Arrays.toString(args) + " args");
+		if (!visible) return new ArrayList<>();
 
 		//there is a custom tab completion for this
 		if (this.tabMethod != null) {
@@ -335,7 +338,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 			//no child to process tab complete
 			System.out.println("Checking child for tab completion");
 			CustomCommand child = getChildrenByName(args[arguments.length]);
-			if (child == null) return null;
+			if (child == null || !child.isVisible()) return new ArrayList<>();
 
 			//child processes tab complete
 			System.out.println("sending tab completion processing to child command");
@@ -513,6 +516,8 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	 * @return whether command sender has permission to use the command
 	 */
 	public boolean hasPermissions(CommandSender sender) {
+		if (this.ignorePermissions) return true;
+
 		for (String reqPerm : this.requiredPermissions)
 			if (!sender.isPermissionSet(reqPerm)) return false;
 

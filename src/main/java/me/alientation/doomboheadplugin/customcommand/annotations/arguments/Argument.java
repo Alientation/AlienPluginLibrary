@@ -1,24 +1,43 @@
 package me.alientation.doomboheadplugin.customcommand.annotations.arguments;
 
+/**
+ * Command Argument with details and match conditions
+ */
 public class Argument {
+    //todo display somewhere idk
     private final String name, description, usage;
-    private final String matchType, matchCondition;
+
+    //checks arguments against these match conditions
+    private final MatchCondition[] matchConditions;
+
+    //whether this command argument is optional
     private final boolean isOptional;
-    public Argument (String name, String description, String usage, String matchType, String matchCondition, boolean isOptional) {
+
+    /**
+     * Constructor
+     *
+     * @param name name of command argument
+     * @param description description of command argument
+     * @param usage usage message if user does not use the command argument properly
+     * @param matchConditions match condition array
+     * @param isOptional optional command argument
+     */
+    public Argument (String name, String description, String usage, MatchCondition[] matchConditions, boolean isOptional) {
         this.name = name;
         this.description = description;
         this.usage = usage;
-        this.matchType = matchType;
-        this.matchCondition = matchCondition;
+        this.matchConditions = matchConditions;
         this.isOptional = isOptional;
     }
 
-    public boolean doesMatchType(String argument) {
-        return CommandArgumentMatch.doesMatchType(argument,matchType);
-    }
-
+    /**
+     * Whether the passed argument matches the conditions
+     *
+     * @param argument argument a player passes to the command
+     * @return success of match
+     */
     public boolean doesMatchCondition(String argument) {
-        return CommandArgumentMatch.doesMatchCondition(argument,matchType);
+        return false;
     }
 
     public String getName() {
@@ -33,12 +52,8 @@ public class Argument {
         return this.usage;
     }
 
-    public String getMatchType() {
-        return this.matchType;
-    }
-
-    public String getMatchCondition() {
-        return this.matchCondition;
+    public MatchCondition[] getMatchCondition() {
+        return this.matchConditions;
     }
 
     public boolean isOptional() {

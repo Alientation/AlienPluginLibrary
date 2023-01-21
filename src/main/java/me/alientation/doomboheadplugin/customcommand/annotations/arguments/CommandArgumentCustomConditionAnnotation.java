@@ -16,9 +16,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface CommandArgumentCustomConditionAnnotation {
     Class<?> BASE_CLASS = Object.class;
 
-    Class<?> matchTypeClass() default Object.class; //load these attributes into CustomCommand
-    String matchTypeMethod() default "";
-
     Class<?> matchConditionClass() default Object.class;
     String matchConditionMethod() default "";
 }

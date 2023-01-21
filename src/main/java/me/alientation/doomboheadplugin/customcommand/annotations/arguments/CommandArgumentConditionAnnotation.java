@@ -12,7 +12,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({ METHOD})
 public @interface CommandArgumentConditionAnnotation {//load these attributes into CustomCommand
-
-    String matchType() default ""; //argument's type
     String[] matchCondition() default {}; //custom condition checking
 }

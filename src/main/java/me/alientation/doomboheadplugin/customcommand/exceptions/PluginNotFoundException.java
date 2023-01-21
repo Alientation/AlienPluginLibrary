@@ -1,5 +1,8 @@
 package me.alientation.doomboheadplugin.customcommand.exceptions;
 
+/**
+ * Plugin was not initialized or correct
+ */
 public class PluginNotFoundException extends RuntimeException{
 	private static final long serialVersionUID = -1511850485557876180L;
 	

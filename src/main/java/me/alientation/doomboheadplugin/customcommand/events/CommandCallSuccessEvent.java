@@ -5,7 +5,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class CommandCallSuccessEvent extends Event{
+/**
+ * Event called when a command call was successful
+ */
+public class CommandCallSuccessEvent extends Event {
 	
 	private static final HandlerList HANDLER = new HandlerList();
 	

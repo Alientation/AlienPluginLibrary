@@ -8,16 +8,28 @@ import org.jetbrains.annotations.NotNull;
  * Processes match conditions todo finish this
  */
 public class MatchCondition {
+    //the string representing the match condition
     private final String matchCondition;
+
+    //broken down match condition (split into sub parts)
     private String parsedMatchCondition;
+
+    //the referenced sub parts
     private SubMatchCondition[] subMatchConditions;
 
-
+    /**
+     * Constructs the match condition and breaks the supplied string down into sub parts
+     *
+     * @param matchCondition supplied match condition to be parsed
+     */
     public MatchCondition(String matchCondition) {
         this.matchCondition = matchCondition.replaceAll("\\s+",""); //remove any whitespace characters
         parseMatchCondition();
     }
 
+    /**
+     * Breaks the supplied match condition string into sub parts
+     */
     public void parseMatchCondition() { //split by parenthesis and boolean operators
         /*
         (()&&()||()) && () || <>
@@ -33,6 +45,9 @@ public class MatchCondition {
 
     }
 
+    /**
+     * Sub part condition class
+     */
     static class SubMatchCondition {
         private final String subMatchCondition;
         private String parsedSubMatchCondition;

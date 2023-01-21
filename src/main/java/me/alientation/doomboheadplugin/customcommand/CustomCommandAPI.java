@@ -16,6 +16,7 @@ import org.bukkit.command.CommandMap;
 
 /**
  * Class to be extended to contain annotated commands
+ * Note: All command on tab complete methods should be in the same class as the command execute method
  */
 public class CustomCommandAPI {
 	private final Map<String,Method> methodMap;
@@ -51,6 +52,8 @@ public class CustomCommandAPI {
 	 * Registers the annotated command methods in this class
 	 */
 	public void registerMethods() {
+
+		//looks for command declarations before checking tab complete
 		for (Method method : this.getClass().getDeclaredMethods()) {
 			if (!method.isAnnotationPresent(CommandAnnotation.class)) continue;
 			//annotated command arguments
@@ -105,6 +108,7 @@ public class CustomCommandAPI {
 			//maps method to command pathway
 			this.methodMap.put("@commandAnnotation@" + commandAnnotation.id(), method);
 
+			//build command (guaranteed to not have been initialized before)
 			CustomCommand.Builder builder = CustomCommand.Builder.newInstance();
 			builder.manager(commandManager)
 					.id(commandID)
@@ -121,6 +125,7 @@ public class CustomCommandAPI {
 
 			System.out.println("Registering Command Method " + command);
 
+			//map command to bukkit
 			if (command.isParent()) {
 				System.out.println("^ is a parent command");
 				Field bukkitCommandMap;
@@ -141,6 +146,7 @@ public class CustomCommandAPI {
 			command.validateCommandMethod(method,this);
 		}
 
+		//check for on tab complete methods
 		for (Method method : this.getClass().getDeclaredMethods()) {
 			if (!method.isAnnotationPresent(CommandTabAnnotation.class)) continue;
 

@@ -6,6 +6,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Event called when a command call attempt was made
+ */
 public class CommandCallAttemptEvent extends Event implements Cancellable{
 	
 	private static final HandlerList HANDLER = new HandlerList();

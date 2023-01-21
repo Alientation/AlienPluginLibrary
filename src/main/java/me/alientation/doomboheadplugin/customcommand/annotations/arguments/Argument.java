@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Command Argument with details and match conditions
+ * Command Argument with argument attributes and match conditions
  */
 public class Argument { //todo test the hardcoded conditionals
     //todo display somewhere idk
@@ -16,6 +16,8 @@ public class Argument { //todo test the hardcoded conditionals
 
     //whether this command argument is optional
     private final boolean isOptional;
+
+    //hardcoded checks
     private final boolean checkValidPlayerName;
     private final boolean checkValidInteger;
     private final boolean checkValidFloat;
@@ -62,10 +64,28 @@ public class Argument { //todo test the hardcoded conditionals
         return true;
     }
 
+    /**
+     * Checks if the argument passed is an online player
+     *
+     * @param sender the initiator of the command
+     * @param command the command that is called
+     * @param label the name of the command that is called
+     * @param argument argument a player passes to the command
+     * @return success of match
+     */
     public boolean checkValidPlayerName(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String argument) {
         return sender.getServer().getPlayer(argument) != null;
     }
 
+    /**
+     * Checks if the argument passed is an integer
+     *
+     * @param sender the initiator of the command
+     * @param command the command that is called
+     * @param label the name of the command that is called
+     * @param argument argument a player passes to the command
+     * @return success of match
+     */
     public boolean checkValidInteger(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String argument) {
         try {
             Integer.parseInt(argument);
@@ -75,6 +95,15 @@ public class Argument { //todo test the hardcoded conditionals
         return true;
     }
 
+    /**
+     * Checks if the argument passed is an float
+     *
+     * @param sender the initiator of the command
+     * @param command the command that is called
+     * @param label the name of the command that is called
+     * @param argument argument a player passes to the command
+     * @return success of match
+     */
     public boolean checkValidFloat(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String argument) {
         try {
             Float.parseFloat(argument);

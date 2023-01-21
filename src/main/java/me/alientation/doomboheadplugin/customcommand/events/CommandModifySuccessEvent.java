@@ -5,6 +5,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Called when modifying a command on runtime was successful
+ */
 public class CommandModifySuccessEvent extends Event {
 
     private static final HandlerList HANDLER = new HandlerList();

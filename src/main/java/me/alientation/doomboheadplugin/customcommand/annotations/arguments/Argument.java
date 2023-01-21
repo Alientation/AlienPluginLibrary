@@ -1,5 +1,9 @@
 package me.alientation.doomboheadplugin.customcommand.annotations.arguments;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Command Argument with details and match conditions
  */
@@ -33,12 +37,15 @@ public class Argument {
     /**
      * Whether the passed argument matches the conditions
      *
+     * @param sender the initiator of the command
+     * @param command the command that is called
+     * @param label the name of the command that is called
      * @param argument argument a player passes to the command
      * @return success of match
      */
-    public boolean doesMatchCondition(String argument) {
+    public boolean doesMatchCondition(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String argument) {
         for (MatchCondition matchCondition : this.matchConditions)
-            if (!matchCondition.doesMatch(argument)) return false; //todo potentially output embedded error message in the condition string
+            if (!matchCondition.doesMatch(sender, command, label, argument)) return false; //todo potentially output embedded error message in the condition string
         return true;
     }
 

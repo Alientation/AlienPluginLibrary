@@ -3,13 +3,14 @@ package me.alientation.doomboheadplugin.customcommand.annotations.arguments;
 public class Argument {
     private final String name, description, usage;
     private final String matchType, matchCondition;
-
-    public Argument (String name, String description, String usage, String matchType, String matchCondition) {
+    private final boolean isOptional;
+    public Argument (String name, String description, String usage, String matchType, String matchCondition, boolean isOptional) {
         this.name = name;
         this.description = description;
         this.usage = usage;
         this.matchType = matchType;
         this.matchCondition = matchCondition;
+        this.isOptional = isOptional;
     }
 
     public boolean doesMatchType(String argument) {
@@ -38,5 +39,9 @@ public class Argument {
 
     public String getMatchCondition() {
         return this.matchCondition;
+    }
+
+    public boolean isOptional() {
+        return this.isOptional;
     }
 }

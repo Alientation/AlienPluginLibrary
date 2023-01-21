@@ -19,6 +19,7 @@ public @interface CommandArgumentAnnotation {
     CommandArgumentCustomConditionAnnotation customCondition() default @CommandArgumentCustomConditionAnnotation();
     String description() default "";
     String usage() default "";
+    boolean optional() default false;
 
 }
 

@@ -69,9 +69,6 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	//whether to show aliases as possible tab completions
 	private boolean showAliasesInTabCompletion = true;
 
-	/**
-	 * Builder Pattern
-	 */
 	public static class Builder {
 		private CustomCommandManager manager;
 		private String id, name, description, usage;

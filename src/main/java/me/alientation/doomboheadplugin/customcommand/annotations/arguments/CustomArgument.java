@@ -12,8 +12,9 @@ public class CustomArgument extends Argument {
     private final Method matchConditionMethod;
 
     public CustomArgument(String name, String description, String usage,
-                          Class<?> matchTypeClass, Method matchTypeMethod, Class<?> matchConditionClass, Method matchConditionMethod) {
-        super(name, description, usage, null, null);
+                          Class<?> matchTypeClass, Method matchTypeMethod, Class<?> matchConditionClass, Method matchConditionMethod,
+                          boolean isOptional) {
+        super(name, description, usage, null, null, isOptional);
 
         this.matchTypeClass = matchTypeClass;
         this.matchTypeMethod = matchTypeMethod;

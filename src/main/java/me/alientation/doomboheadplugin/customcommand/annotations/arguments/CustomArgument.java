@@ -1,7 +1,9 @@
 package me.alientation.doomboheadplugin.customcommand.annotations.arguments;
 
+import me.alientation.doomboheadplugin.customcommand.exceptions.CommandArgumentException;
 import me.alientation.doomboheadplugin.customcommand.exceptions.InvalidMethodException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class CustomArgument extends Argument {
@@ -26,6 +28,11 @@ public class CustomArgument extends Argument {
 
     @Override
     public boolean doesMatchCondition(String argument) { //todo
+        try {
+            matchConditionMethod.invoke(argument);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new CommandArgumentException();
+        }
         return true;
     }
 

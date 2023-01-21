@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Command Argument with details and match conditions
  */
-public class Argument {
+public class Argument { //todo test the hardcoded conditionals
     //todo display somewhere idk
     private final String name, description, usage;
 

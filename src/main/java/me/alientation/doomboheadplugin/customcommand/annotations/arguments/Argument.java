@@ -32,7 +32,8 @@ public class Argument { //todo test the hardcoded conditionals
      * @param isOptional optional command argument
      */
     public Argument (String name, String description, String usage, MatchCondition[] matchConditions,
-                     boolean isOptional, boolean checkValidPlayerName, boolean checkValidInteger, boolean checkValidFloat) {
+                     boolean isOptional, boolean checkValidPlayerName, boolean checkValidInteger, boolean checkValidFloat,
+                     float minNumber, float maxNumber) {
         this.name = name;
         this.description = description;
         this.usage = usage;

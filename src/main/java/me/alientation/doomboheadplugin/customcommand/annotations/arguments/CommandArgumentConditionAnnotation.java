@@ -17,6 +17,8 @@ public @interface CommandArgumentConditionAnnotation {//load these attributes in
     boolean checkValidPlayerName() default false;
     boolean checkValidInteger() default false;
     boolean checkValidFloat() default false;
+    float maxNumber() default 1000000000f;
+    float minNumber() default -1000000000f;
 
     //todo add more checks
 }

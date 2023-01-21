@@ -32,7 +32,9 @@ public class CustomArgument extends Argument {
      */
     public CustomArgument(String name, String description, String usage, Class<?> matchConditionClass, Method matchConditionMethod,
                           boolean isOptional) {
-        super(name, description, usage, null, isOptional, false, false, false);
+        super(name, description, usage, null,
+                isOptional, false, false, false,
+                -100000000f,100000000f);
 
         this.matchConditionClass = matchConditionClass;
         this.matchConditionMethod = matchConditionMethod;

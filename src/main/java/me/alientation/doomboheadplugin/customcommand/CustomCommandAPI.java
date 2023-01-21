@@ -68,7 +68,7 @@ public class CustomCommandAPI {
 					arguments[i] = new Argument(arg.name(),arg.description(),arg.usage(),
 							Argument.extractMatchConditions(arg.condition().matchCondition()),
 							arg.optional(), arg.condition().checkValidPlayerName(), arg.condition().checkValidInteger(),
-							arg.condition().checkValidFloat());
+							arg.condition().checkValidFloat(), arg.condition().minNumber(), arg.condition().maxNumber());
 					continue;
 				}
 

@@ -3,6 +3,7 @@ package me.alientation.doomboheadplugin.customcommand.events;
 import me.alientation.doomboheadplugin.customcommand.CustomCommand;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class CommandCallSuccessEvent extends Event{
 	
@@ -19,7 +20,7 @@ public class CommandCallSuccessEvent extends Event{
 	}
 	
 	@Override
-	public HandlerList getHandlers() {
+	public @NotNull HandlerList getHandlers() {
 		return HANDLER;
 	}
 

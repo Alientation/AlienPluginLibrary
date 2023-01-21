@@ -229,11 +229,9 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 
 		System.out.println("Passed all checks, proceeding to invoking command");
 
-		//TODO: Add parameter flag annotations so that the user can greater customize the parameters that get accepted
-
-		//Object[] params = {sender,command,label,args};
+		Object[] params = {sender,command,label,args};
 		//matches parameters to the command method parameters
-		Object[] params = new Object[this.commandMethod.getParameterCount()];
+		/*Object[] params = new Object[this.commandMethod.getParameterCount()]; todo figure out whether to have custom parameter forwarding
 		int paramsIndex = 0;
 		for (Class<?> c : this.commandMethod.getParameterTypes()) {
 			if (c == CommandSender.class)	params[paramsIndex] = sender;
@@ -242,7 +240,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 			else if (c == String[].class) 	params[paramsIndex] = args;
 			else 							params[paramsIndex] = null;
 			paramsIndex++;
-		}
+		}*/
 
 		//invoking command method through reflection
 		try {

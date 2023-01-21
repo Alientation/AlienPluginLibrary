@@ -61,7 +61,7 @@ public class Argument { //todo test the hardcoded conditionals
         if (checkValidFloat) if (!checkValidFloat(sender,command,label,argument)) return false;
 
         for (MatchCondition matchCondition : this.matchConditions)
-            if (!matchCondition.doesMatch(sender, command, label, argument)) return false; //todo potentially output embedded error message in the condition string
+            if (!matchCondition.doesMatch(sender, command, label, argument)) return false; //todo output embedded error message in the condition string
         return true;
     }
 

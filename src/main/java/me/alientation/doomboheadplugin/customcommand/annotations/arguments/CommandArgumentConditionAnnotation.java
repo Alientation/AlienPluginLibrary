@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({ METHOD})
 public @interface CommandArgumentConditionAnnotation {//load these attributes into CustomCommand
-    String[] matchCondition() default {}; //todo condition checking
+    String[] matchCondition() default {};
 
     boolean checkValidPlayerName() default false;
     boolean checkValidInteger() default false;

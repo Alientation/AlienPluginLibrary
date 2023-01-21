@@ -22,7 +22,6 @@ public final class DoomboheadPlugin extends JavaPlugin {
         this.manager.registerCommand();
 
 
-
     }
 
     @Override

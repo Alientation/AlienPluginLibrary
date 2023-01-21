@@ -39,16 +39,18 @@ public class CustomArgument extends Argument {
         this.matchConditionClass = matchConditionClass;
         this.matchConditionMethod = matchConditionMethod;
 
-        validateMethods();
+        validateMethod();
     }
 
     /**
      * Validates the supplied method
-     * todo allow for custom parameter feeding in (probably best to make use of the command parameter matching
      */
-    public void validateMethods() {
-        if (matchConditionMethod.getParameterCount() != 1 || matchConditionMethod.getParameterTypes()[0] != String.class)
-            throw new InvalidMethodException("Command Argument MatchCondition method does not have the correct parameters. There should be only 1 parameter (String)");
+    public void validateMethod() {
+        if (matchConditionMethod.getParameterCount() != 4)
+            throw new InvalidMethodException("Invalid Parameter Count for method " + matchConditionMethod + ". Required 4");
+
+        if (matchConditionMethod.getParameterTypes()[0] != CommandSender.class || matchConditionMethod.getParameterTypes()[1] != Command.class || matchConditionMethod.getParameterTypes()[2] != String.class || matchConditionMethod.getParameterTypes()[3] != String.class)
+            throw new InvalidMethodException("Invalid Parameter Type for method " + matchConditionMethod + ". Required types (CommandSender, Command, String, String)");
     }
 
     /**

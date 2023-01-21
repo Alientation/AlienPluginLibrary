@@ -2,8 +2,6 @@ Link command permissions with custom permission
 add more options/settings to custom command (whether to show all available commands even if sender doesn't have permissions)
 Log tools (probably separate)
 More annotations
-Work on ParameterFlagAnnotation, ParameterOptionalAnnotation
 Reflection library to easily compare parameter and return types if it matches
 Get usage (and possible description) to work. it does not  display it when the onCommand method returns false
-
 

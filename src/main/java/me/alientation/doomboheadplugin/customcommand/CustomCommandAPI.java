@@ -130,13 +130,18 @@ public class CustomCommandAPI {
 				System.out.println("^ is a parent command");
 				Field bukkitCommandMap;
 				try {
+
 					bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 					bukkitCommandMap.setAccessible(true);
 					CommandMap commandMap = ((CommandMap) bukkitCommandMap.get(Bukkit.getServer()));
-					commandMap.register(commandName, new BaseCommand(commandName,commandDescription, commandUsage, commandAliases, command));
 
-					if (this.commandManager.getPlugin().getCommand(commandName) != null)
+					//if plugin has another command of the same name, resolve the issues?
+					if (this.commandManager.getPlugin().getCommand(commandName) != null) {
+						System.out.println("Resolving duplicate command names (" + commandName + ")");
 						Objects.requireNonNull(this.commandManager.getPlugin().getCommand(commandName)).unregister(commandMap);
+					}
+
+					commandMap.register(commandName, new BaseCommand(commandName,commandDescription, commandUsage, commandAliases, command));
 
 				} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 					e.printStackTrace();

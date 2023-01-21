@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Class for storing information regarding a CustomCommand and forwarding functionality to reflected methods
- * todo allow for changing attributes of command (name, description, usage) by deleting old command from map and making a new command
  * <p>
  *
  * command ids are stored in this way
@@ -35,10 +34,10 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	private final String name;
 
 	//description of the command that is displayed
-	private final String description;
+	private String description;
 
 	//usage displayed when the onCommand fails
-	private final String usage;
+	private String usage;
 
 	//Aliases to the command
 	private final List<String> aliases;
@@ -536,13 +535,13 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	}
 
 	/**
-	 * TODO updates command description
+	 * updates command description
 	 *
 	 * @param description new command description
-	 * @throws Exception still in development
 	 */
-	public void setDescription(String description) throws Exception {
-		throw new Exception("DON'T USE THIS RIGHT NOW");
+	public void setDescription(String description) {
+		this.description = description;
+		baseCommand.setDescription(description);
 	}
 
 	/**
@@ -555,13 +554,13 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	}
 
 	/**
-	 * TODO updates command usage
+	 * updates command usage
 	 *
 	 * @param usage new command usage
-	 * @throws Exception still in development
 	 */
-	public void setUsage(String usage) throws Exception {
-		throw new Exception("DON'T USE THIS RIGHT NOW");
+	public void setUsage(String usage) {
+		this.usage = usage;
+		this.baseCommand.setUsage(usage);
 	}
 
 	/**
@@ -574,32 +573,32 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	}
 
 	/**
-	 * TODO clears command aliases
-	 *
-	 * @throws Exception still in development
+	 * clears command aliases
 	 */
-	public void clearAliases() throws Exception {
-		throw new Exception("DON'T USE THIS RIGHT NOW");
+	public void clearAliases() {
+		this.aliases.clear();
+		this.baseCommand.setAliases(new ArrayList<>());
 	}
 
 	/**
-	 * TODO add command alias
+	 * add command alias
 	 *
 	 * @param alias new command alias
-	 * @throws Exception still in development
 	 */
-	public void addAlias(String alias) throws Exception {
-		throw new Exception("DON'T USE THIS RIGHT NOW");
+	public void addAlias(String alias) {
+		this.aliases.add(alias);
+		this.baseCommand.setAliases(this.aliases);
 	}
 
 	/**
-	 * TODO remove command alias
+	 * remove command alias
 	 *
 	 * @param alias removed command alias
-	 * @throws Exception still in development
 	 */
-	public void removeAlias(String alias) throws Exception {
-		throw new Exception("DON'T USE THIS RIGHT NOW");
+	public void removeAlias(String alias) {
+		for (int i = 0; i < aliases.size(); i++)
+			if (aliases.get(i).equals(alias)) aliases.remove(i--);
+		this.baseCommand.setAliases(aliases);
 	}
 
 	/**

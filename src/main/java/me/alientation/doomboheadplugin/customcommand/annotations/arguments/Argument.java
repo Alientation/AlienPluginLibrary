@@ -16,6 +16,9 @@ public class Argument {
 
     //whether this command argument is optional
     private final boolean isOptional;
+    private final boolean checkValidPlayerName;
+    private final boolean checkValidInteger;
+    private final boolean checkValidFloat;
 
     /**
      * Constructor
@@ -26,12 +29,18 @@ public class Argument {
      * @param matchConditions match condition array
      * @param isOptional optional command argument
      */
-    public Argument (String name, String description, String usage, MatchCondition[] matchConditions, boolean isOptional) {
+    public Argument (String name, String description, String usage, MatchCondition[] matchConditions,
+                     boolean isOptional, boolean checkValidPlayerName, boolean checkValidInteger, boolean checkValidFloat) {
         this.name = name;
         this.description = description;
         this.usage = usage;
         this.matchConditions = matchConditions;
         this.isOptional = isOptional;
+
+        //todo, when match condition is completed, simply just add match conditions to the existing match conditions instead of these hardcoded checks
+        this.checkValidPlayerName = checkValidPlayerName;
+        this.checkValidInteger = checkValidInteger;
+        this.checkValidFloat = checkValidFloat;
     }
 
     /**
@@ -44,8 +53,34 @@ public class Argument {
      * @return success of match
      */
     public boolean doesMatchCondition(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String argument) {
+        if (checkValidPlayerName) if (!checkValidPlayerName(sender,command,label,argument)) return false;
+        if (checkValidInteger) if (!checkValidInteger(sender,command,label,argument)) return false;
+        if (checkValidFloat) if (!checkValidFloat(sender,command,label,argument)) return false;
+
         for (MatchCondition matchCondition : this.matchConditions)
             if (!matchCondition.doesMatch(sender, command, label, argument)) return false; //todo potentially output embedded error message in the condition string
+        return true;
+    }
+
+    public boolean checkValidPlayerName(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String argument) {
+        return sender.getServer().getPlayer(argument) != null;
+    }
+
+    public boolean checkValidInteger(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String argument) {
+        try {
+            Integer.parseInt(argument);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkValidFloat(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String argument) {
+        try {
+            Float.parseFloat(argument);
+        } catch (NumberFormatException e) {
+            return false;
+        }
         return true;
     }
 
@@ -67,6 +102,18 @@ public class Argument {
 
     public boolean isOptional() {
         return this.isOptional;
+    }
+
+    public boolean doesCheckValidPlayerName() {
+        return this.checkValidPlayerName;
+    }
+
+    public boolean doesCheckValidInteger() {
+        return this.checkValidInteger;
+    }
+
+    public boolean doesCheckValidFloat() {
+        return this.checkValidFloat;
     }
 
     /**

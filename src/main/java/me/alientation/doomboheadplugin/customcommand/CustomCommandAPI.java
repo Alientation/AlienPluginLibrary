@@ -4,8 +4,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import me.alientation.doomboheadplugin.customcommand.annotations.arguments.Argument;
 import me.alientation.doomboheadplugin.customcommand.annotations.arguments.CommandArgumentAnnotation;
 import me.alientation.doomboheadplugin.customcommand.annotations.arguments.CommandArgumentCustomConditionAnnotation;
+import me.alientation.doomboheadplugin.customcommand.annotations.arguments.CustomArgument;
 import me.alientation.doomboheadplugin.customcommand.annotations.commands.CommandAnnotation;
 import me.alientation.doomboheadplugin.customcommand.annotations.commands.CommandTabAnnotation;
 import me.alientation.doomboheadplugin.customcommand.annotations.permissions.PermissionAnnotation;
@@ -50,34 +52,34 @@ public class CustomCommandAPI {
 	 */
 	public void registerMethods() {
 		for (Method method : this.getClass().getDeclaredMethods()) {
-			if (!method.isAnnotationPresent(CommandAnnotation.class) && !method.isAnnotationPresent(CommandTabAnnotation.class)) continue;
-
-			//annotated tab complete method
-			if (method.isAnnotationPresent(CommandTabAnnotation.class)) {
-				CommandTabAnnotation tabAnnotation = method.getAnnotation(CommandTabAnnotation.class);
-				this.methodMap.put("@tabAnnotation@" + tabAnnotation.id(), method);
-				CustomCommand command = this.getCommand(tabAnnotation.id(), tabAnnotation.name());
-				command.validateTabMethod(method, this);
-
-				System.out.println("Registering Command Tab Method " + this.getCommand(tabAnnotation.id(), tabAnnotation.name()));
-				continue;
-			}
-
+			if (!method.isAnnotationPresent(CommandAnnotation.class)) continue;
 			//annotated command arguments
 			CommandArgumentAnnotation[] commandArgumentAnnotation = method.getAnnotationsByType(CommandArgumentAnnotation.class);
+			Argument[] arguments = new Argument[commandArgumentAnnotation.length];
 
-			for (CommandArgumentAnnotation commandArgument : commandArgumentAnnotation) {
-				if (commandArgument.customCondition().matchConditionClass() == CommandArgumentCustomConditionAnnotation.BASE_CLASS) {
+			for (int i = 0; i < commandArgumentAnnotation.length; i++) {
+				CommandArgumentAnnotation arg = commandArgumentAnnotation[i];
+
+				if (arg.customCondition().matchConditionClass() == CommandArgumentCustomConditionAnnotation.BASE_CLASS) {
 					//not custom argument
-
-
-
+					arguments[i] = new Argument(arg.name(),arg.description(),arg.usage(),
+							Argument.extractMatchConditions(arg.condition().matchCondition()),
+							arg.optional(), arg.condition().checkValidPlayerName(), arg.condition().checkValidInteger(),
+							arg.condition().checkValidFloat());
 					continue;
 				}
 
+				Method matchConditionMethod = null;
+				for (Method checkMethod : arg.customCondition().matchConditionClass().getDeclaredMethods()) {
+					if (checkMethod.getName().equals(arg.customCondition().matchConditionMethod())) {
+						matchConditionMethod = checkMethod;
+						break;
+					}
+				}
+
 				//custom argument
-
-
+				arguments[i] = new CustomArgument(arg.name(),arg.description(),arg.usage(),
+						arg.customCondition().matchConditionClass(), matchConditionMethod, arg.optional());
 			}
 
 
@@ -93,22 +95,31 @@ public class CustomCommandAPI {
 			String commandUsage = commandAnnotation.usage();
 
 			List<String> commandPermissions = new ArrayList<>();
-			List<Boolean> commandRequiredPermissions = new ArrayList<>();
+			List<String> requiredCommandPermissions = new ArrayList<>();
 			for (PermissionAnnotation permissionAnnotation : permissionAnnotations) {
+				if (permissionAnnotation.required())
+					requiredCommandPermissions.add(permissionAnnotation.permission());
 				commandPermissions.add(permissionAnnotation.permission());
-				commandRequiredPermissions.add(permissionAnnotation.required());
 			}
 
 			//maps method to command pathway
 			this.methodMap.put("@commandAnnotation@" + commandAnnotation.id(), method);
 
-			//instantiates the custom command
-			CustomCommand command = this.getCommand(commandID, commandName);
+			CustomCommand.Builder builder = CustomCommand.Builder.newInstance();
+			builder.manager(commandManager)
+					.id(commandID)
+					.name(commandName)
+					.description(commandDescription)
+					.usage(commandUsage)
+					.aliases(commandAliases)
+					.arguments(arguments)
+					.permissions(commandPermissions)
+					.requiredPermissions(requiredCommandPermissions);
 
-			for (int i = 0; i < commandPermissions.size(); i++)
-				command.addPermission(commandPermissions.get(i),commandRequiredPermissions.get(i));
+			CustomCommand command = builder.build();
+			this.commandManager.mapCommand(command);
 
-			System.out.println("Registering Command Method " + this.getCommand(commandID, commandName));
+			System.out.println("Registering Command Method " + command);
 
 			if (command.isParent()) {
 				System.out.println("^ is a parent command");
@@ -129,6 +140,19 @@ public class CustomCommandAPI {
 
 			command.validateCommandMethod(method,this);
 		}
+
+		for (Method method : this.getClass().getDeclaredMethods()) {
+			if (!method.isAnnotationPresent(CommandTabAnnotation.class)) continue;
+
+			//annotated tab complete method
+			CommandTabAnnotation tabAnnotation = method.getAnnotation(CommandTabAnnotation.class);
+			this.methodMap.put("@tabAnnotation@" + tabAnnotation.id(), method);
+			CustomCommand command = this.getCommand(tabAnnotation.id(), tabAnnotation.name());
+			command.validateTabMethod(method, this);
+
+			System.out.println("Registering Command Tab Method " + this.getCommand(tabAnnotation.id(), tabAnnotation.name()));
+		}
+
 	}
 
 	/**
@@ -141,17 +165,13 @@ public class CustomCommandAPI {
 		CustomCommand command = this.commandManager.getCustomCommandMap().get(commandID);
 
 		if (command == null) {
-			command = CustomCommand.Builder.newInstance()
-					.id(commandID)
-					.name(commandName)
-					.manager(this.commandManager)
+			command = CustomCommand.Builder.newInstance().name(commandName).id(commandID)
 					.build();
 			this.commandManager.mapCommand(command);
 		}
 
 		return command;
 	}
-
 	/**
 	 * Gets the method mapping
 	 *

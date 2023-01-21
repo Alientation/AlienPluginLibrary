@@ -214,7 +214,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		if (args.length < arguments.length) return !invalidArgumentCount(sender,command,label,args);
 
 		//check if command arguments pass the condition checks
-		System.out.println("Checking if sender passed appropriate arguments");
+		System.out.println("Checking if sender passed appropriate arguments"); //todo incorporate optional arguments into these checks (if there is optional arguments, this means there should not be further children
 		for (int argIndex = 0; argIndex < arguments.length; argIndex++)
 			if (!arguments[argIndex].doesMatchCondition(sender,command,label,args[argIndex])) return !invalidArgument(sender,command,label,args[argIndex], arguments[argIndex]);
 
@@ -327,7 +327,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 				for (String s : commands.getAliases())
 					if (s.indexOf(args[0]) == 0) possibleCompletions.add(s);
 			}
-		} else { //command arguments todo
+		} else { //command arguments todo incorporate optional arguments into these checks (if there is optional arguments, this means there should not be further children
 
 
 		}

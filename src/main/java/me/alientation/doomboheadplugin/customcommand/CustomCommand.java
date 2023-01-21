@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import me.alientation.doomboheadplugin.customcommand.annotations.arguments.Argument;
 import me.alientation.doomboheadplugin.customcommand.events.CommandCallAttemptEvent;
 import me.alientation.doomboheadplugin.customcommand.events.CommandCallSuccessEvent;
 import me.alientation.doomboheadplugin.customcommand.exceptions.InvalidMethodException;
@@ -46,6 +47,10 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	private final Set<String> permissions;
 	private final Set<String> requiredPermissions;
 
+	//arguments for the command
+	private final Argument[] arguments;
+
+
 	//The parent command. For example the command /help list -> help
 	private CustomCommand parent;
 
@@ -73,11 +78,13 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		private CustomCommandManager manager;
 		private String id, name, description, usage;
 		private final Collection<String> aliases, permissions, requiredPermissions;
+		private Argument[] arguments;
 
 		private Builder() {
 			aliases = new ArrayList<>();
 			requiredPermissions = new HashSet<>();
 			permissions = new HashSet<>();
+			arguments = new Argument[] {};
 		}
 		public static Builder newInstance() {
 			return new Builder();
@@ -138,6 +145,11 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 			return this;
 		}
 
+		public Builder arguments(Argument[] arguments) {
+			 this.arguments = arguments;
+			 return this;
+		}
+
 		public void verify() {
 			if (id == null) throw new IllegalStateException("id can't be null");
 			if (name == null) throw new IllegalStateException("name can't be null");
@@ -167,6 +179,8 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		this.permissions.addAll(builder.permissions);
 		this.requiredPermissions.addAll(builder.requiredPermissions);
 
+		this.arguments = builder.arguments;
+
 		this.manager = builder.manager;
 	}
 
@@ -195,10 +209,19 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		System.out.println("Checking if sender has permissions");
 		if (!hasPermissions(sender)) return !invalidPermissions(sender,command,label,args);
 
+		//check if command has enough arguments passed
+		System.out.println("Checking if sender passed enough arguments");
+		if (args.length < arguments.length) return !invalidArgumentCount(sender,command,label,args);
+
+		//check if command arguments pass the condition checks
+		System.out.println("Checking if sender passed appropriate arguments");
+		for (int argIndex = 0; argIndex < arguments.length; argIndex++)
+			if (!arguments[argIndex].doesMatchCondition(sender,command,label,args[argIndex])) return !invalidArgument(sender,command,label,args[argIndex], arguments[argIndex]);
+
 		//processes down the argument pathway if there exists a children command
 		System.out.println("Checking if there is a child command");
-		CustomCommand child = args.length > 0 ? getChildrenByName(args[0]) : null;
-		if (child != null) return child.onCommand(sender, command, label, removeFirst(args));
+		CustomCommand child = args.length > arguments.length ? getChildrenByName(args[arguments.length]) : null;
+		if (child != null) return child.onCommand(sender, command, label, removeFirst(args, 1 + arguments.length));
 
 		//no linked on command method
 		System.out.println("Checking if command is invalid");
@@ -274,34 +297,40 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		}
 
 		//default tab complete
-		if (args.length > 1) {
-			//there are arguments, so processing of tab complete shouldn't happen here
+		if (args.length > 1 + arguments.length) {
+			//there are arguments not part of this command, so processing of tab complete shouldn't happen here
 
 			//no child to process tab complete
 			System.out.println("Checking child for tab completion");
-			CustomCommand child = getChildrenByName(args[0]);
+			CustomCommand child = getChildrenByName(args[arguments.length]);
 			if (child == null) return null;
 
 			//child processes tab complete
 			System.out.println("sending tab completion processing to child command");
-			return getChildrenByName(args[0]).onTabComplete(sender, command, label, removeFirst(args));
+			return child.onTabComplete(sender, command, label, removeFirst(args,arguments.length + 1));
 		}
 
-		//built in tab completion
+		//built in tab completion todo take into account of command arguments
 		List<String> possibleCompletions = new ArrayList<>();
-		for (CustomCommand commands : this.children) {
-			//adding child command names
-			if (commands.hasPermissions(sender) && commands.getName().indexOf(args[0]) == 0)
-				possibleCompletions.add(commands.getName());
 
-			//don't show aliases on tab completion
-			if (!showAliasesInTabCompletion) continue;
+		//no more command arguments to be passed
+		if (args.length == 1 + arguments.length) {
+			for (CustomCommand commands : this.children) {
+				//adding child command names
+				if (commands.hasPermissions(sender) && commands.getName().indexOf(args[0]) == 0)
+					possibleCompletions.add(commands.getName());
 
-			//adding aliases of the child commands
-			for (String s : commands.getAliases())
-				if (s.indexOf(args[0]) == 0) possibleCompletions.add(s);
+				//don't show aliases on tab completion
+				if (!showAliasesInTabCompletion) continue;
+
+				//adding aliases of the child commands
+				for (String s : commands.getAliases())
+					if (s.indexOf(args[0]) == 0) possibleCompletions.add(s);
+			}
+		} else { //command arguments todo
+
+
 		}
-
 		System.out.println("possible completions " + possibleCompletions);
 		return possibleCompletions;
 	}
@@ -333,7 +362,36 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	public boolean invalidPermissions(CommandSender sender, Command command, String label, String[] args) {
 		return true;
 	}
-	
+
+	/**
+	 * Called whenever a sender did not pass the appropriate arguments to execute a command
+	 *
+	 * @param sender issuer of the command
+	 * @param command command that was issued
+	 * @param label text that was typed
+	 * @param args arguments passed to the command
+	 *
+	 * @return whether the command should print out the usage description
+	 */
+	public boolean invalidArgumentCount(CommandSender sender, Command command, String label, String[] args) {
+		return true;
+	}
+
+	/**
+	 * Called whenever a sender did not pass the appropriate arguments to execute a command
+	 *
+	 * @param sender issuer of the command
+	 * @param command command that was issued
+	 * @param label text that was typed
+	 * @param arg argument passed to the command
+	 * @param requiredArgument the required argument to be passed to command
+	 *
+	 * @return whether the command should print out the usage description
+	 */
+	public boolean invalidArgument(CommandSender sender, Command command, String label, String arg, Argument requiredArgument) {
+		return true;
+	}
+
 	/**
 	 * Called whenever a sender does not have the appropriate permissions to execute a command
 	 * 
@@ -404,15 +462,15 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	}
 
 	/**
-	 * Remove the first element of an array
+	 * Remove the first n elements of an array
 	 *
 	 * @param array original array
-	 * @return an array[N-1] with the first element removed from the original
+	 * @return an array[N-n] with the first n element removed from the original
 	 */
-	private String[] removeFirst(String[] array) {
+	private String[] removeFirst(String[] array, int n) {
 		//helper method
-		String[] newArray = new String[array.length-1];
-		System.arraycopy(array, 1, newArray, 0, array.length - 1);
+		String[] newArray = new String[array.length-n];
+		System.arraycopy(array, n, newArray, 0, array.length - n);
 		return newArray;
 	}
 	

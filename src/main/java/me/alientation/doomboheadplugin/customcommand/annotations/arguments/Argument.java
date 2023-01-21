@@ -37,7 +37,9 @@ public class Argument {
      * @return success of match
      */
     public boolean doesMatchCondition(String argument) {
-        return false;
+        for (MatchCondition matchCondition : this.matchConditions)
+            if (!matchCondition.doesMatch(argument)) return false; //todo potentially output embedded error message in the condition string
+        return true;
     }
 
     public String getName() {
@@ -58,5 +60,18 @@ public class Argument {
 
     public boolean isOptional() {
         return this.isOptional;
+    }
+
+    /**
+     * Converts string array to MatchCondition objects
+     *
+     * @param matchConditions input string array of match conditions
+     * @return array of MatchCondition objects
+     */
+    public static MatchCondition[] extractMatchConditions(String[] matchConditions) {
+        MatchCondition[] converted = new MatchCondition[matchConditions.length];
+        for (int i = 0; i < matchConditions.length; i++)
+            converted[i] = new MatchCondition(matchConditions[i]);
+        return converted;
     }
 }

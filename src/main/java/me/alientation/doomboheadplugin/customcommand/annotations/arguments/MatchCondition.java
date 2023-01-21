@@ -12,7 +12,7 @@ public class MatchCondition {
         this.match = match;
     }
 
-    public boolean doesMatch() {
+    public boolean doesMatch(String argument) {
         return false;
     }
 

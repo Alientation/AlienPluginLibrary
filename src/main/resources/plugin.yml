@@ -6,15 +6,18 @@ authors: [ Alientation ]
 description: Plugin for the Doombohead Server
 
 permissions:
-  help:
-    description: Allows help command
+  alphabet:
+    description: Allows alphabet command
     default: true
-  help.list:
-    description: Allows help list command
+  alphabet.list:
+    description: Allows alphabet list command
     default: true
-  help.add:
-    description: Allows help edit command
+  alphabet.add:
+    description: Allows alphabet edit command
     default: op
+  customgui:
+    description: Allows custom gui command
+    default: true
   admin:
     description: become admin
     default: true

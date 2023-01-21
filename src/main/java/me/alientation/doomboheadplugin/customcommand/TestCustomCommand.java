@@ -10,44 +10,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestCustomCommand extends CustomCommandAPI {
-    @CommandAnnotation(id = "help", name = "help",
-            description = "Help Command",
-            usage = "/help",
-            aliases = {"helpme"})
-    @PermissionAnnotation(permission = "help", required = false)
+    @CommandAnnotation(id = "alphabet", name = "alphabet",
+            description = "Alphabet Command",
+            usage = "/alphabet",
+            aliases = {"abc"})
+    @PermissionAnnotation(permission = "alphabet", required = false)
     public boolean helpCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length != 0) return false;
-        sender.sendMessage("No help for you loser");
+        sender.sendMessage("No alphabet for you loser");
         return true;
     }
 
 
-    @CommandAnnotation(id = "help.list", name = "list")
-    @PermissionAnnotation(permission = "help.list", required = false)
+    @CommandAnnotation(id = "alphabet.list", name = "list")
+    @PermissionAnnotation(permission = "alphabet.list", required = false)
     public boolean helpListCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        sender.sendMessage("Help List\n-----------------------\n1) nothing\n2) helps\n------------------------");
+        sender.sendMessage("Alphabet\n-----------------------\nabcdefghijklmnopqrstuvwxyz\n------------------------");
         return true;
     }
 
 
-    @CommandAnnotation(id = "help.list.add", name = "add")
-    @PermissionAnnotation(permission = "help.add", required = true)
+    @CommandAnnotation(id = "alphabet.list.add", name = "add")
+    @PermissionAnnotation(permission = "alphabet.add", required = true)
     @PermissionAnnotation(permission = "admin", required = false)
     public boolean helpAddCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        sender.sendMessage("oink");
+        sender.sendMessage("no.");
         return true;
     }
 
 
-    @CommandAnnotation(id = "help.hello", name = "hello", aliases = {"hi"})
-    @PermissionAnnotation(permission = "help",required=false)
+    @CommandAnnotation(id = "alphabet.hello", name = "hello", aliases = {"hi"})
+    @PermissionAnnotation(permission = "alphabet",required=false)
     public boolean helpHelloCommand(CommandSender sender, Command cmd, String label, String[] args) {
         sender.sendMessage("hi");
         return true;
     }
 
 
-    @CommandTabAnnotation(id = "help.hello", name = "hello")
+    @CommandTabAnnotation(id = "alphabet.hello", name = "hello")
     public List<String> helpHelloTab(CommandSender sender, Command cmd, String label, String[] args) {
         List<String> list = new ArrayList<>();
         list.add("SIRI");

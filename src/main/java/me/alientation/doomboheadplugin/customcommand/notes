@@ -3,5 +3,13 @@ add more options/settings to custom command (whether to show all available comma
 Log tools (probably separate)
 More annotations
 Reflection library to easily compare parameter and return types if it matches
-Get usage (and possible description) to work. it does not  display it when the onCommand method returns false
 
+
+
+
+
+Possible Bugs
+Get usage (and possible description) to work. it does not  display it when the onCommand method returns false
+Ordering of annotated commands in CustomCommandAPI extended class might cause bugs when reading in a method for a child command before the parent command is read in/loaded
+argument annotations haven't been tested nor has the conditions either
+Loading in 2+ CustomCommandAPI classes has not been tested

@@ -9,3 +9,19 @@ Get usage (and possible description) to work. it does not  display it when the o
 
 
 Match Condition
+
+
+output message when condition failed
+=================================================================
+?"this is sent to command executor" (use escape character '\')
+
+?@p"this is sent to all players"
+?@p:name=Alientation"this is sent to the player named Alientation"
+?@p:permission=admin"this is sent to players with admin permission"
+  @p:name,permission, todo
+
+?@s"this is sent to the server"
+
+=================================================================
+
+

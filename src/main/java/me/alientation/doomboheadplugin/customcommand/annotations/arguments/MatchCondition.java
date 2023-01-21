@@ -8,6 +8,7 @@ public class MatchCondition {
 
     public MatchCondition(String matchCondition) {
         this.matchCondition = matchCondition;
+
     }
 
     /**

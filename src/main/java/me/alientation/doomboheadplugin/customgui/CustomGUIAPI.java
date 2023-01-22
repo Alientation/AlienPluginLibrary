@@ -39,21 +39,26 @@ public class CustomGUIAPI {
 			if (method.isAnnotationPresent(GUIMarkerAnnotation.class) && method.isAnnotationPresent(SlotIDAnnotation.class)) {
 				String guiID = method.getAnnotation(GUIMarkerAnnotation.class).value();
 				CustomGUI gui = this.manager.getGUI(guiID);
-				if (gui == null)
-					throw new UnknownGUIException();
-				List<Integer> slotIDs = new ArrayList<>();
+
+				//gui does not exist yet
+				if (gui == null) throw new UnknownGUIException();
+
+				//registers slots
 				for (SlotIDAnnotation slotIDAnnotation : method.getAnnotationsByType(SlotIDAnnotation.class)) {
 					int slotID = slotIDAnnotation.value();
-					if (gui.isOutOfBounds(slotID))
-						throw new IndexOutOfBoundsException();
-					slotIDs.add(slotID);
-					
-					/*
-					 * TODO: Add annotations that allow for creating itemstacks
-					 */
-					
-					
+
+					if (gui.isOutOfBounds(slotID)) throw new IndexOutOfBoundsException("slot " + slotID + " out of bounds of " + gui);
+					if (gui.getSlot(slotID) != null) throw new IllegalStateException("slot " + slotID + " already present in " + gui);
+
+					//TODO: Add annotations that allow for creating itemstacks
+
 					gui.getSlot(slotID).setActionMethod(method);
+					gui.setSlot(slotID, ItemSlot.Builder.newInstance()
+									.slotID(slotID)
+									.guiParent(gui)
+									.build()
+					);
+
 					this.methodMap.put(guiID + "@" + slotID, method);
 				}
 			}

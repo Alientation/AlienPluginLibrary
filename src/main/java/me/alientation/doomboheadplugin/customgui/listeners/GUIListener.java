@@ -36,26 +36,32 @@ import org.bukkit.event.inventory.TradeSelectEvent;
 public class GUIListener {
 	
 	//reflection
-	private Map<Class<?>,List<Method>> methodMap = new HashMap<>();
-	private Map<Method,List<ParameterFlagAnnotation>> methodParameters = new HashMap<>();
-	
+	private final Map<Class<?>,List<Method>> methodMap = new HashMap<>();
+	private final Map<Method,List<ParameterFlagAnnotation>> methodParameters = new HashMap<>();
+
+	/**
+	 * Registers annotated methods in this class
+	 */
 	public GUIListener() {
 		registerMethods();
 	}
-	
+
+	/**
+	 *
+	 */
 	public void registerMethods() {
 		for (Method method : this.getClass().getMethods()) {
 			if (method.isAnnotationPresent(EventHandler.class)) {
 				boolean isEventParamFound = false;
 				for (Parameter parameter : method.getParameters()) {
 					if (parameter.isAnnotationPresent(ParameterFlagAnnotation.class)) {
-						List<ParameterFlagAnnotation> annotations = this.methodParameters.getOrDefault(method, new ArrayList<ParameterFlagAnnotation>());
+						List<ParameterFlagAnnotation> annotations = this.methodParameters.getOrDefault(method, new ArrayList<>());
 						annotations.add(parameter.getAnnotation(ParameterFlagAnnotation.class));
 						this.methodParameters.put(method,annotations);
 					} else if (parameter.getParameterizedType() instanceof Event) {
 						if (isEventParamFound)
 							throw new InvalidMethodException();
-						List<Method> methods = this.methodMap.getOrDefault(parameter.getType(), new ArrayList<Method>());
+						List<Method> methods = this.methodMap.getOrDefault(parameter.getType(), new ArrayList<>());
 						methods.add(method);
 						this.methodMap.put(parameter.getType(), methods);
 					} else {

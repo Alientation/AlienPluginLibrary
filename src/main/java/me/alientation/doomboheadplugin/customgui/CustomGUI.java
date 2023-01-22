@@ -71,8 +71,9 @@ public class CustomGUI {
 		}
 
 		public void verify() {
-			if (inventory == null)
-				inventory = Bukkit.createInventory(null, size, title);
+			if (id == null) throw new IllegalStateException("GUI id cannot be null");
+			if (size == 0 || size % 9 != 0 || size > 54) throw new IllegalStateException("GUI size must be a multiple of 9 maxed at 54");
+			if (inventory == null) inventory = Bukkit.createInventory(null, size, title);
 		}
 
 		public CustomGUI build() {

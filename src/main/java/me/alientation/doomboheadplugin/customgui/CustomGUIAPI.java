@@ -16,13 +16,9 @@ import java.util.Map;
  */
 public class CustomGUIAPI {
 	
-	private Map<String,Method> methodMap;
+	private final Map<String,Method> methodMap;
 	private CustomGUIManager manager;
-	
-	public CustomGUIAPI() {
-		this.methodMap = new HashMap<>();
-	}
-	
+
 	public CustomGUIAPI(CustomGUIManager manager) {
 		this.methodMap = new HashMap<>();
 		registerManager(manager);
@@ -31,7 +27,10 @@ public class CustomGUIAPI {
 	public void registerManager(CustomGUIManager manager) {
 		this.manager = manager;
 	}
-	
+
+	/**
+	 * Registers annotated methods
+	 */
 	public void registerMethods() {
 		if (this.manager == null)
 			throw new UnknownManagerException();

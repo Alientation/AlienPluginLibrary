@@ -29,9 +29,15 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class InventoryListener implements Listener {
 	
-	private JavaPlugin plugin;
-	private CustomGUIManager manager;
-	
+	private final JavaPlugin plugin;
+	private final CustomGUIManager manager;
+
+	/**
+	 * Constructs inventory listener specific to a gui manager
+	 *
+	 * @param plugin Java Plugin
+	 * @param manager GUI Manager
+	 */
 	public InventoryListener(JavaPlugin plugin, CustomGUIManager manager) {
 		this.plugin = plugin;
 		this.manager = manager;

@@ -96,12 +96,12 @@ public class CustomCommandManager {
 		if (this.plugin == null) throw new PluginNotFoundException("The plugin has not yet been registered to the manager");
 
 		//iterate through each command already loaded in the map and register them
-		this.CUSTOM_COMMAND_MAP.forEach((commandID,commandMethod) -> {
+		this.CUSTOM_COMMAND_MAP.forEach((commandID,customCommand) -> {
 			//not the parent command (it by itself is not a complete command, there are arguments to it that are required)
-			if (!commandMethod.isParent()) return;
+			if (!customCommand.isParent()) return;
 
 			//registering command to the bukkit command map
-			System.out.println("COMMAND >>> " + commandMethod.getName());
+			System.out.println("COMMAND >>> " + customCommand.getName());
 			Field bukkitCommandMap;
 			try {
 				bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap"); //Bukkit's command mappings
@@ -115,7 +115,7 @@ public class CustomCommandManager {
 				}
 
 				//registers the executing command method to the command
-				((BaseCommand) Objects.requireNonNull(commandMap.getCommand(commandID))).setExecutor(commandMethod);
+				((BaseCommand) Objects.requireNonNull(commandMap.getCommand(commandID))).setExecutor(customCommand);
 			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}

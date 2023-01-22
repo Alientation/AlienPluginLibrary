@@ -15,7 +15,7 @@ permissions:
   alphabet.add:
     description: Allows alphabet edit command
     default: op
-  customgui:
+  customGUI:
     description: Allows custom gui command
     default: true
   admin:

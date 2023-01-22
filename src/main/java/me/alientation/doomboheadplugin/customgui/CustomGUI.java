@@ -6,6 +6,7 @@ import java.util.Map;
 import me.alientation.doomboheadplugin.customgui.listeners.GUIListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,9 +36,10 @@ public class CustomGUI {
 	//map of slot location to ItemSlot
 	private final Map<Integer, ItemSlot> slotsMap = new HashMap<>();
 
-	static class Builder {
+	public static class Builder {
 		String id, title;
 		Inventory inventory;
+		InventoryType inventoryType;
 		int size;
 		GUIListener guiListener;
 		public Builder() {
@@ -63,6 +65,11 @@ public class CustomGUI {
 			return this;
 		}
 
+		public Builder inventoryType(InventoryType inventoryType) {
+			this.inventoryType = inventoryType;
+			return this;
+		}
+
 		public Builder size(int size) {
 			this.size = size;
 			return this;
@@ -75,8 +82,14 @@ public class CustomGUI {
 
 		public void verify() {
 			if (id == null) throw new IllegalStateException("GUI id cannot be null");
-			if (size == 0 || size % 9 != 0 || size > 54) throw new IllegalStateException("GUI size must be a multiple of 9 maxed at 54");
-			if (inventory == null) inventory = Bukkit.createInventory(null, size, title);
+			if (useChestInventoryType() && (size == 0 || size % 9 != 0 || size > 54)) throw new IllegalStateException("GUI size must be multiple of 9 to 54 for a InventoryType chest");
+			if (inventory == null && useChestInventoryType()) inventory = Bukkit.createInventory(null, size, title);
+			if (inventory == null && size != 0) throw new IllegalStateException("Size should not be initialized for an inventory created from an InventoryType " + inventoryType);
+			if (inventory == null) inventory = Bukkit.createInventory(null, inventoryType, title);
+		}
+
+		private boolean useChestInventoryType() {
+			return inventoryType == null || inventoryType == InventoryType.CHEST;
 		}
 
 		public CustomGUI build() {

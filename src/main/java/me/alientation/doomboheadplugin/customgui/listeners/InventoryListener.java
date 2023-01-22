@@ -24,7 +24,9 @@ import org.bukkit.event.inventory.TradeSelectEvent;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
-
+/**
+ * Listens to inventory events and forwards if necessary
+ */
 public class InventoryListener implements Listener {
 	
 	private JavaPlugin plugin;

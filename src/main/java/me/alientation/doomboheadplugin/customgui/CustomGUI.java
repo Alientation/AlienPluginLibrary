@@ -14,18 +14,18 @@ import org.bukkit.inventory.Inventory;
 public class CustomGUI {
 
 	//id of the custom gui
-	private String id;
+	private final String id;
 
 	//title of the bukkit inventory
-	private String title;
+	private final String title;
 
 	//bukkit inventory that holds the gui
-	private Inventory inventory;
+	private final Inventory inventory;
 
 	//size of the bukkit inventory
-	private int size;
+	private final int size;
 
-	//attached listener to this gui
+	//attached listener so that this gui can listen to events
 	private GUIListener guiListener;
 
 	//map of slot location to ItemSlot

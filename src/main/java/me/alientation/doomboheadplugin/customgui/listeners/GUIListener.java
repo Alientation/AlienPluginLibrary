@@ -31,7 +31,7 @@ import org.bukkit.event.inventory.SmithItemEvent;
 import org.bukkit.event.inventory.TradeSelectEvent;
 
 /**
- *
+ * Receives events from Inventory Listener and handles functionality connections to client annotated methods by reflection
  */
 public class GUIListener {
 	

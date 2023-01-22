@@ -6,36 +6,48 @@ import java.util.Map;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * Manages GUIs
+ */
 public class CustomGUIManager {
 	
-	/*
-	 * Stores CustomGUI mappings
+
+	//Stores CustomGUI mappings
+	private final Map<String,CustomGUI> GUI_MAP;
+	private final Map<Inventory,CustomGUI> INVENTORY_MAP;
+	private final JavaPlugin plugin;
+
+	/**
+	 * Constructs a GUI Manager for this plugin
+	 *
+	 * @param plugin Java Plugin
 	 */
-	private Map<String,CustomGUI> GUI_MAP; 
-	private Map<Inventory,CustomGUI> INVENTORY_MAP;
-	private JavaPlugin plugin;
-	
 	public CustomGUIManager(JavaPlugin plugin) {
 		this.plugin = plugin;
 		this.GUI_MAP = new HashMap<>();
 		this.INVENTORY_MAP = new HashMap<>();
 	}
 	
-	/*
+	/**
 	 * Loads in a specified GUI from server save file to prevent having to waste resources maintaining inventories
 	 */
 	public void load() {
 		
 	}
 	
-	/*
+	/**
 	 * 
 	 */
 	public void save() {
 		
 	}
-	
-	
+
+	/**
+	 *
+	 *
+	 * @param inventory
+	 * @param id
+	 */
 	public void addInventory(CustomGUI inventory, String id) {
 		this.GUI_MAP.put(id, inventory);
 		this.INVENTORY_MAP.put(inventory.getInventory(), inventory);

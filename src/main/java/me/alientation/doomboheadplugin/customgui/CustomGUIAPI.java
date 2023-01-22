@@ -11,7 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * Links annotated methods with the Custom GUIs
+ */
 public class CustomGUIAPI {
 	
 	private Map<String,Method> methodMap;

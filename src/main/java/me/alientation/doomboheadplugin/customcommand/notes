@@ -5,6 +5,8 @@ More annotations
 Reflection library to easily compare parameter and return types if it matches
 
 
+Implement Command Creation on runtime
+Implement parameter matching using parameter flag annotations
 
 
 

@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a slot in a CustomGUI inventory and actions associated with it
@@ -54,7 +55,7 @@ public class ItemSlot {
 	 *
 	 * @param builder builder pattern
 	 */
-	public ItemSlot(Builder builder) {
+	public ItemSlot(@NotNull Builder builder) {
 		this.slotID = builder.slotID;
 		this.guiParent = builder.guiParent;
 		this.item = builder.item;
@@ -72,7 +73,6 @@ public class ItemSlot {
 
 		Object[] params = new Object[this.actionMethod.getParameterCount()];
 		int paramsIndex = 0;
-
 
 		//TODO: Add parameter flag annotations so that the user can greater customize the parameters that get accepted
 		for (Class<?> c : this.actionMethod.getParameterTypes()) {
@@ -93,8 +93,11 @@ public class ItemSlot {
 		return this.item;
 	}
 	
-	public void setItem(ItemStack item) { 
+	public void setItem(ItemStack item) {
+		if (this.guiParent.getSlot(this.slotID) != this) throw new IllegalStateException(this + " is not a valid slot in parent " + guiParent);
+
 		this.item = item;
+		this.guiParent.setSlot(this.slotID,this);
 	}
 	
 	public Method getActionMethod() {
@@ -111,5 +114,10 @@ public class ItemSlot {
 	
 	public CustomGUI getGUIHolder() {
 		return this.guiParent;
+	}
+
+	@Override
+	public String toString() {
+		return slotID + ":" + item;
 	}
 }

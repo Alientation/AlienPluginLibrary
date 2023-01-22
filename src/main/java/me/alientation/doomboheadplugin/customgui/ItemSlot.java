@@ -34,8 +34,28 @@ public class ItemSlot {
 			slotID = -1;
 		}
 
-		public Builder newInstance() {
+		public static Builder newInstance() {
 			return new Builder();
+		}
+
+		public Builder slotID(int slotID) {
+			this.slotID = slotID;
+			return this;
+		}
+
+		public Builder guiParent(CustomGUI guiParent) {
+			this.guiParent = guiParent;
+			return this;
+		}
+
+		public Builder item(ItemStack item) {
+			this.item = item;
+			return this;
+		}
+
+		public Builder actionMethod(Method actionMethod) {
+			this.actionMethod = actionMethod;
+			return this;
 		}
 
 		public void verify() {

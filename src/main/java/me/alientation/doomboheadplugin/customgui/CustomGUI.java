@@ -82,8 +82,12 @@ public class CustomGUI {
 
 		public void verify() {
 			if (id == null) throw new IllegalStateException("GUI id cannot be null");
+
+			//inventory type chest, size must be multiple of 9
 			if (useChestInventoryType() && (size == 0 || size % 9 != 0 || size > 54)) throw new IllegalStateException("GUI size must be multiple of 9 to 54 for a InventoryType chest");
 			if (inventory == null && useChestInventoryType()) inventory = Bukkit.createInventory(null, size, title);
+
+			//other inventory type, size must not be initialized through the builder todo perhaps a warning would be better instead of a crash
 			if (inventory == null && size != 0) throw new IllegalStateException("Size should not be initialized for an inventory created from an InventoryType " + inventoryType);
 			if (inventory == null) inventory = Bukkit.createInventory(null, inventoryType, title);
 		}

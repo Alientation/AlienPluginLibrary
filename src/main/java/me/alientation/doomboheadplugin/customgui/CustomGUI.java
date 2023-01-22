@@ -7,6 +7,7 @@ import me.alientation.doomboheadplugin.customgui.listeners.GUIListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a GUI based within a chest inventory and handles functionality like button clicks
@@ -87,7 +88,7 @@ public class CustomGUI {
 	 *
 	 * @param builder builder pattern
 	 */
-	public CustomGUI(Builder builder) {
+	public CustomGUI(@NotNull Builder builder) {
 		this.id = builder.id;
 		this.inventory = builder.inventory;
 		this.title = builder.title;
@@ -95,7 +96,7 @@ public class CustomGUI {
 		this.guiListener = builder.guiListener;
 	}
 
-	public void open(Player player) {
+	public void open(@NotNull Player player) {
 		player.openInventory(this.inventory);
 	}
 
@@ -108,10 +109,9 @@ public class CustomGUI {
 	}
 	
 	public void setSlot(int index, ItemSlot item) {
-		if (isOutOfBounds(index)) throw new IndexOutOfBoundsException("Index " + index + " out of bounds of " + size + "(" + this + ")");
+		if (isOutOfBounds(index)) throw new IndexOutOfBoundsException("Index " + index + " out of bounds in " + this);
 
 		this.inventory.setItem(index, item.getItem());
-		
 		this.slotsMap.put(index, item);
 	}
 	

@@ -23,6 +23,7 @@ import org.bukkit.event.inventory.SmithItemEvent;
 import org.bukkit.event.inventory.TradeSelectEvent;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Listens to inventory events and forwards if necessary
@@ -45,7 +46,7 @@ public class InventoryListener implements Listener {
 	
 	
 	@EventHandler
-	public void onInvClick(InventoryClickEvent e) {
+	public void onInvClick(@NotNull InventoryClickEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
@@ -63,7 +64,7 @@ public class InventoryListener implements Listener {
 	
 	
 	@EventHandler
-	public void onInventoryOpen(InventoryOpenEvent e) {
+	public void onInventoryOpen(@NotNull InventoryOpenEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
@@ -72,7 +73,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onInventoryClose(InventoryCloseEvent e) {
+	public void onInventoryClose(@NotNull InventoryCloseEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
@@ -81,7 +82,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onBrewComplete(BrewEvent e) {
+	public void onBrewComplete(@NotNull BrewEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getContents());
 		
 		if (gui == null) return;
@@ -90,7 +91,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onCraftItem(CraftItemEvent e) {
+	public void onCraftItem(@NotNull CraftItemEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
@@ -99,7 +100,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onFurnaceExtract(FurnaceExtractEvent e) {
+	public void onFurnaceExtract(@NotNull FurnaceExtractEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getPlayer().getOpenInventory().getTopInventory());
 		
 		if (gui == null) return;
@@ -108,7 +109,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onInventoryDrag(InventoryDragEvent e) {
+	public void onInventoryDrag(@NotNull InventoryDragEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
@@ -117,7 +118,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerAction(InventoryEvent e) {
+	public void onPlayerAction(@NotNull InventoryEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
@@ -126,7 +127,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onInventoryInteract(InventoryInteractEvent e) {
+	public void onInventoryInteract(@NotNull InventoryInteractEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
@@ -135,7 +136,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onInventoryMoveItem(InventoryMoveItemEvent e) {
+	public void onInventoryMoveItem(@NotNull InventoryMoveItemEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getSource());
 		
 		if (gui != null)
@@ -153,7 +154,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onInventoryPickupItem(InventoryPickupItemEvent e) {
+	public void onInventoryPickupItem(@NotNull InventoryPickupItemEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
@@ -162,7 +163,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onAnvilInsert(PrepareAnvilEvent e) {
+	public void onAnvilInsert(@NotNull PrepareAnvilEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
@@ -171,7 +172,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onCraftInsert(PrepareItemCraftEvent e) {
+	public void onCraftInsert(@NotNull PrepareItemCraftEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
@@ -180,7 +181,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onSmithingInsert(PrepareSmithingEvent e) {
+	public void onSmithingInsert(@NotNull PrepareSmithingEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
@@ -189,7 +190,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onSmithItem(SmithItemEvent e) {
+	public void onSmithItem(@NotNull SmithItemEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
@@ -198,7 +199,7 @@ public class InventoryListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onTradeSelect(TradeSelectEvent e) {
+	public void onTradeSelect(@NotNull TradeSelectEvent e) {
 		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;

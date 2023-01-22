@@ -1,0 +1,30 @@
+CustomGUIAPI -> creates a blueprint for a gui (should be renamed to CustomGUIBluePrintAPI)
+
+CustomGUIManager -> stores CustomGUIBluePrints, maps id to CustomGUIBluePrint
+
+CustomGUIBluePrint -> stores a general layout, attributes, and functionality, maps id to CustomGUI
+CustomGUI -> created from the blueprint, essentially a functional version of the blue print
+
+Button Annotation -> annotates where a button is located and the functionality it has
+EventHandler Annotation -> annotates a method that handles an event passed from server
+GUIMarkerAnnotation -> (prolly rename) annotates the blueprint holder
+SlotIDAnnotation -> annotates the slot location in a blueprint
+
+there should be a general annotation of the class that extends CustomGUIAPI that details
+attributes of the blueprint (so like the blueprintID, title, size
+
+
+For specific GUIs like furnaces and brewing stands, allow user to annotate that
+in CustomGUIBluePrint -> detail the Inventory type
+
+
+
+
+SlotTypes
+- Button
+- Empty
+
+SlotStates
+- Frozen
+- Hidden
+- Permissions/conditions

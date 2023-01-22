@@ -11,6 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a GUI based within a chest inventory and handles functionality like button clicks
+ *
+ * todo have general gui that keeps functionality across all players but shows different stuff to each (sort of like sky block backpacks)
+ *
  */
 public class CustomGUI {
 
@@ -31,7 +34,6 @@ public class CustomGUI {
 
 	//map of slot location to ItemSlot
 	private final Map<Integer, ItemSlot> slotsMap = new HashMap<>();
-
 
 	static class Builder {
 		String id, title;

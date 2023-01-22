@@ -1,12 +1,18 @@
 package me.alientation.doomboheadplugin;
 
 import me.alientation.doomboheadplugin.customcommand.CustomCommandManager;
+import me.alientation.doomboheadplugin.customcommand.TestCustomCommand;
+import me.alientation.doomboheadplugin.customgui.CustomGUI;
 import me.alientation.doomboheadplugin.customgui.CustomGUIManager;
 import me.alientation.doomboheadplugin.customgui.commands.CustomGUICommand;
+import me.alientation.doomboheadplugin.customgui.listeners.InventoryListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class DoomboheadPlugin extends JavaPlugin {
     private final CustomCommandManager manager;
+
+    private CustomGUIManager guiManager;
+    private InventoryListener inventoryListener;
 
     public DoomboheadPlugin() {
         //initiate manager for this plugin on construction
@@ -17,10 +23,17 @@ public final class DoomboheadPlugin extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         //loads all annotated commands (through reflection) from a supplied class
-        //this.manager.loadCommand(new TestCustomCommand());
+        this.manager.loadCommand(new TestCustomCommand());
 
 
-        CustomGUIManager guiManager = new CustomGUIManager(this);
+        this.guiManager = new CustomGUIManager(this);
+        CustomGUI gui = CustomGUI.Builder.newInstance()
+                .id("test gui")
+
+                .build();
+        this.guiManager.addInventory();
+
+
         this.manager.loadCommand(new CustomGUICommand(guiManager));
 
         //registers all commands to the manager

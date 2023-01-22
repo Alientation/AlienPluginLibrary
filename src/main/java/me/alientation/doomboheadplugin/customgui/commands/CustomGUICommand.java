@@ -7,6 +7,9 @@ import me.alientation.doomboheadplugin.customgui.CustomGUIManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * Test command for CustomGUI
+ */
 public class CustomGUICommand extends CustomCommandAPI {
 	
 	private final CustomGUIManager guiManager;

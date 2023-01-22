@@ -30,11 +30,12 @@ import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.inventory.SmithItemEvent;
 import org.bukkit.event.inventory.TradeSelectEvent;
 
-
+/**
+ *
+ */
 public class GUIListener {
 	
 	//reflection
-	
 	private Map<Class<?>,List<Method>> methodMap = new HashMap<>();
 	private Map<Method,List<ParameterFlagAnnotation>> methodParameters = new HashMap<>();
 	

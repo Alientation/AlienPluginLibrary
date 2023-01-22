@@ -6,46 +6,100 @@ import java.util.Map;
 import me.alientation.doomboheadplugin.customgui.listeners.GUIListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
+/**
+ * Represents a GUI based within a chest inventory and handles functionality like button clicks
+ */
 public class CustomGUI {
-	
+
+	//id of the custom gui
 	private String id;
-	
-	private Inventory inventory;
+
+	//title of the bukkit inventory
 	private String title;
+
+	//bukkit inventory that holds the gui
+	private Inventory inventory;
+
+	//size of the bukkit inventory
 	private int size;
-	private InventoryType inventoryType;
-	
+
+	//attached listener to this gui
 	private GUIListener guiListener;
-	
+
+	//map of slot location to ItemSlot
 	private Map<Integer, ItemSlot> slotsMap = new HashMap<>();
-	
-	public CustomGUI(String name, InventoryType type, String id, GUIListener guiListener) {
-		this.id = id;
-		this.inventory = Bukkit.createInventory(null, type, name);
-		this.title = name;
-		this.size = 0;
-		this.inventoryType = type;
-		this.guiListener = guiListener;
+
+
+	static class Builder {
+		String id, title;
+		Inventory inventory;
+		int size;
+		GUIListener guiListener;
+		public Builder() {
+			size = 54;
+		}
+
+		public static Builder newInstance() {
+			return new Builder();
+		}
+
+		public Builder id(String id) {
+			this.id = id;
+			return this;
+		}
+
+		public Builder title(String title) {
+			this.title = title;
+			return this;
+		}
+
+		public Builder inventory(Inventory inventory) {
+			this.inventory = inventory;
+			return this;
+		}
+
+		public Builder size(int size) {
+			this.size = size;
+			return this;
+		}
+
+		public Builder guiListener(GUIListener guiListener) {
+			this.guiListener = guiListener;
+			return this;
+		}
+
+		public void verify() {
+			if (inventory == null)
+				inventory = Bukkit.createInventory(null, size, title);
+		}
+
+		public CustomGUI build() {
+			verify();
+			return new CustomGUI(this);
+		}
 	}
-	
-	public CustomGUI(String name, int size, String id, GUIListener guiListener) {
-		this.id = id;
-		this.inventory = Bukkit.createInventory(null, size, name);
-		this.title = name;
-		this.size = size;
-		this.inventoryType = InventoryType.CHEST;
-		this.guiListener = guiListener;
+
+	/**
+	 * Constructs a custom GUI using Builder pattern
+	 *
+	 * @param builder builder pattern
+	 */
+	public CustomGUI(Builder builder) {
+		this.id = builder.id;
+		this.inventory = builder.inventory;
+		this.title = builder.title;
+		this.size = builder.size;
+		this.guiListener = builder.guiListener;
 	}
-	
+
 	public void open(Player player) {
 		player.openInventory(this.inventory);
 	}
-	
+
 	public boolean isOutOfBounds(int index) {
-		return false;
+		return index >= size();
 	}
 
 	public ItemSlot getSlot(int index) {
@@ -72,10 +126,6 @@ public class CustomGUI {
 	
 	public int size() {
 		return this.size;
-	}
-	
-	public InventoryType type() {
-		return this.inventoryType;
 	}
 	
 	public GUIListener getGUIListener() {

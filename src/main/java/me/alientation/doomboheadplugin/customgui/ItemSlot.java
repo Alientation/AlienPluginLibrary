@@ -68,29 +68,24 @@ public class ItemSlot {
 	 * @param e Inventory click event
 	 */
 	public void onItemClick(CustomGUI gui, InventoryClickEvent e) {
-		if (this.actionMethod != null) {
-			
-			Object[] params = new Object[this.actionMethod.getParameterCount()];
-			int paramsIndex = 0;
-			
-			/*
-			 * TODO: Add parameter flag annotations so that the user can greater customize the parameters that get accepted
-			 */
-			for (Class<?> c : this.actionMethod.getParameterTypes()) {
-				if (c == CustomGUI.class)	params[paramsIndex] = gui;
-				else if (c == InventoryClickEvent.class) 	params[paramsIndex] = e;
-				else 							params[paramsIndex] = null;
-				paramsIndex++;
-			}
-			
-			try {
-				this.actionMethod.invoke(this.actionMethod.getClass(), params);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
-				e1.printStackTrace();
-			}
-		} else {
-			
-			
+		if (this.actionMethod == null) return;
+
+		Object[] params = new Object[this.actionMethod.getParameterCount()];
+		int paramsIndex = 0;
+
+
+		//TODO: Add parameter flag annotations so that the user can greater customize the parameters that get accepted
+		for (Class<?> c : this.actionMethod.getParameterTypes()) {
+			if (c == CustomGUI.class)	params[paramsIndex] = gui;
+			else if (c == InventoryClickEvent.class) 	params[paramsIndex] = e;
+			else 							params[paramsIndex] = null;
+			paramsIndex++;
+		}
+
+		try {
+			this.actionMethod.invoke(this.actionMethod.getClass(), params);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
+			e1.printStackTrace();
 		}
 	}
 	

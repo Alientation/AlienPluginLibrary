@@ -17,6 +17,8 @@ public class CustomGUICommand extends CustomCommandAPI {
 	public CustomGUICommand(CustomGUIManager guiManager) {
 		this.guiManager = guiManager;
 	}
+	
+	//todo FIGURE OUT WHY THE DEFAULT ON TAB COMPLETE ISN'T SHOWING THE SHOW SUBCOMMAND???
 
 	@CommandAnnotation(id = "customGUI", name = "customGUI", description = "commands for custom gui")
 	@PermissionAnnotation(permission =  "customGUI", required = true)

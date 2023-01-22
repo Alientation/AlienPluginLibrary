@@ -757,7 +757,12 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	 */
 	@Override
 	public String toString() {
-		return this.getName() + "@" + this.id;
+		StringBuilder children = new StringBuilder("{");
+		for (CustomCommand customCommand : this.children)
+			children.append(customCommand).append(",");
+		children.deleteCharAt(children.length()-1).append("}");
+
+		return this.getName() + "@" + this.id + " " + children;
 	}
 	
 }

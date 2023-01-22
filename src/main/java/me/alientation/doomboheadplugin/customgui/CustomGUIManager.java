@@ -48,7 +48,7 @@ public class CustomGUIManager {
 	 * @param inventory
 	 * @param id
 	 */
-	public void addInventory(CustomGUI inventory, String id) {
+	public void addInventory(String id, CustomGUI inventory) {
 		this.GUI_MAP.put(id, inventory);
 		this.INVENTORY_MAP.put(inventory.getInventory(), inventory);
 	}

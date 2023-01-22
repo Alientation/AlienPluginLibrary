@@ -35,8 +35,10 @@ import org.bukkit.event.inventory.TradeSelectEvent;
  */
 public class GUIListener {
 	
-	//reflection
+	//details what methods correspond to what events
 	private final Map<Class<?>,List<Method>> methodMap = new HashMap<>();
+
+	//maps the flagged parameters of a methods
 	private final Map<Method,List<ParameterFlagAnnotation>> methodParameters = new HashMap<>();
 
 	/**
@@ -47,28 +49,36 @@ public class GUIListener {
 	}
 
 	/**
-	 *
+	 * Maps information about EventHandler methods
 	 */
 	public void registerMethods() {
 		for (Method method : this.getClass().getMethods()) {
-			if (method.isAnnotationPresent(EventHandler.class)) {
-				boolean isEventParamFound = false;
-				for (Parameter parameter : method.getParameters()) {
-					if (parameter.isAnnotationPresent(ParameterFlagAnnotation.class)) {
-						List<ParameterFlagAnnotation> annotations = this.methodParameters.getOrDefault(method, new ArrayList<>());
-						annotations.add(parameter.getAnnotation(ParameterFlagAnnotation.class));
-						this.methodParameters.put(method,annotations);
-					} else if (parameter.getParameterizedType() instanceof Event) {
-						if (isEventParamFound)
-							throw new InvalidMethodException();
-						List<Method> methods = this.methodMap.getOrDefault(parameter.getType(), new ArrayList<>());
-						methods.add(method);
-						this.methodMap.put(parameter.getType(), methods);
-					} else {
-						throw new UnflaggedParameterException();
-					}
+			if (!method.isAnnotationPresent(EventHandler.class)) continue;
+
+			this.methodParameters.put(method,new ArrayList<>());
+
+			boolean eventParamFound = false;
+			for (Parameter parameter : method.getParameters()) {
+
+				//flagged parameter
+				if (parameter.isAnnotationPresent(ParameterFlagAnnotation.class)) {
+					this.methodParameters.get(method).add(parameter.getAnnotation(ParameterFlagAnnotation.class));
+					continue;
 				}
+
+				//If not a flagged parameter, it must be of type Event
+				if (!(parameter.getParameterizedType() instanceof Event)) throw new UnflaggedParameterException();
+
+				//Only one Event parameter is allowed
+				if (eventParamFound) throw new InvalidMethodException();
+				eventParamFound = true;
+
+				List<Method> methods = this.methodMap.getOrDefault(parameter.getType(), new ArrayList<>());
+				methods.add(method);
+				this.methodMap.put(parameter.getType(), methods);
+
 			}
+
 		}
 	}
 	
@@ -83,7 +93,7 @@ public class GUIListener {
 	}
 	
 	public void onPlayerInventoryClick(CustomGUI gui, InventoryClickEvent e) {
-		
+
 	}
 	
 	public void onGUIClick(CustomGUI gui, InventoryClickEvent e) {

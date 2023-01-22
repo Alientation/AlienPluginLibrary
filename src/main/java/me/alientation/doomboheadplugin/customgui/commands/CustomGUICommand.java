@@ -7,6 +7,8 @@ import me.alientation.doomboheadplugin.customgui.CustomGUIManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
+
 /**
  * Test command for CustomGUI
  */
@@ -23,7 +25,7 @@ public class CustomGUICommand extends CustomCommandAPI {
 	@PermissionAnnotation(permission = "customgui", required = true)
 	public boolean showGUICommand(CommandSender sender) {
 		if (sender instanceof Player) {
-			this.guiManager.getGUI("test.gui");
+			this.guiManager.getGUI("test.gui").open((Player) sender);
 			return true;
 		}
 		sender.sendMessage("A nonliving entity can not access this command");

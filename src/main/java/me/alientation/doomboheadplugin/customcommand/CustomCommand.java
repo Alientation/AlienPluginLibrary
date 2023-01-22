@@ -2,6 +2,8 @@ package me.alientation.doomboheadplugin.customcommand;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.util.*;
 
 import me.alientation.doomboheadplugin.customcommand.annotations.arguments.Argument;
@@ -264,9 +266,9 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 
 		System.out.println("Passed all checks, proceeding to invoking command");
 
-		Object[] params = {sender,command,label,args};
+		//Object[] params = {sender,command,label,args};
 		//matches parameters to the command method parameters
-		/*Object[] params = new Object[this.commandMethod.getParameterCount()]; todo figure out whether to have custom parameter forwarding
+		Object[] params = new Object[this.commandMethod.getParameterCount()]; //todo figure out whether to have custom parameter forwarding
 		int paramsIndex = 0;
 		for (Class<?> c : this.commandMethod.getParameterTypes()) {
 			if (c == CommandSender.class)	params[paramsIndex] = sender;
@@ -275,7 +277,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 			else if (c == String[].class) 	params[paramsIndex] = args;
 			else 							params[paramsIndex] = null;
 			paramsIndex++;
-		}*/
+		}
 
 		//invoking command method through reflection
 		try {
@@ -460,11 +462,10 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	 * @param method method to be validated
 	 */
 	public void validateCommandMethod(Method method, CustomCommandAPI methodObject) throws InvalidMethodException {
-		if (method.getParameterCount() != 4)
-			throw new InvalidMethodException("Invalid Parameter Count for method " + method + ". Required 4");
-
-		if (method.getParameterTypes()[0] != CommandSender.class || method.getParameterTypes()[1] != Command.class || method.getParameterTypes()[2] != String.class || method.getParameterTypes()[3] != String[].class)
-			throw new InvalidMethodException("Invalid Parameter Type for method " + method + ". Required types (CommandSender, Command, String, String[])");
+		//todo remove once implemented parameter flagging and other parameter forwarding
+		for (Type parameter : method.getParameterTypes())
+			if (parameter != CommandSender.class && parameter != Command.class && parameter != String.class && parameter != String[].class)
+				throw new InvalidMethodException("Invalid Parameter Types for method " + method + ". Only accepted (CommandSender, Command, String, String[])");
 
 		if (methodObject.getMethodMap().get("@commandAnnotation@" + this.getId()) != method)
 			throw new InvalidMethodException("Method is not contained within the supplied methodObject > " + method);
@@ -479,11 +480,10 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	 * @param method method to be validated
 	 */
 	public void validateTabMethod(Method method, CustomCommandAPI methodObject) throws InvalidMethodException {
-		if (method.getParameterCount() != 4)
-			throw new InvalidMethodException("Invalid Parameter Count for method " + method + ". Required 4");
-
-		if (method.getParameterTypes()[0] != CommandSender.class || method.getParameterTypes()[1] != Command.class || method.getParameterTypes()[2] != String.class || method.getParameterTypes()[3] != String[].class)
-			throw new InvalidMethodException("Invalid Parameter Type for method " + method + ". Required types (CommandSender, Command, String, String[])");
+		//todo remove once implemented parameter flagging and other parameter forwarding
+		for (Type parameter : method.getParameterTypes())
+			if (parameter != CommandSender.class && parameter != Command.class && parameter != String.class && parameter != String[].class)
+				throw new InvalidMethodException("Invalid Parameter Types for method " + method + ". Only accepted (CommandSender, Command, String, String[])");
 
 		if (methodObject.getMethodMap().get("@tabAnnotation@" + this.getId()) != method)
 			throw new InvalidMethodException("Method is not contained within the supplied methodObject > " + method);

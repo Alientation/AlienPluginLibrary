@@ -26,10 +26,10 @@ public class CustomGUI {
 	private final int size;
 
 	//attached listener so that this gui can listen to events
-	private GUIListener guiListener;
+	private final GUIListener guiListener;
 
 	//map of slot location to ItemSlot
-	private Map<Integer, ItemSlot> slotsMap = new HashMap<>();
+	private final Map<Integer, ItemSlot> slotsMap = new HashMap<>();
 
 
 	static class Builder {
@@ -108,6 +108,8 @@ public class CustomGUI {
 	}
 	
 	public void setSlot(int index, ItemSlot item) {
+		if (isOutOfBounds(index)) throw new IndexOutOfBoundsException("Index " + index + " out of bounds of " + size + "(" + this + ")");
+
 		this.inventory.setItem(index, item.getItem());
 		
 		this.slotsMap.put(index, item);
@@ -121,7 +123,7 @@ public class CustomGUI {
 		return this.inventory;
 	}
 	
-	public String getName() {
+	public String getTitle() {
 		return this.title;
 	}
 	
@@ -131,5 +133,10 @@ public class CustomGUI {
 	
 	public GUIListener getGUIListener() {
 		return this.guiListener;
+	}
+
+	@Override
+	public String toString() {
+		return "CustomGUI:CHEST" + size + "(" + id + " | " + title + ")";
 	}
 }

@@ -12,30 +12,25 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class DoomboheadPlugin extends JavaPlugin {
     private final CustomCommandManager manager;
 
-    private CustomGUIManager guiManager;
-    private InventoryListener inventoryListener;
+    private final CustomGUIManager guiManager;
 
     public DoomboheadPlugin() {
         //initiate manager for this plugin on construction
         this.manager = new CustomCommandManager(this);
+        this.guiManager = new CustomGUIManager(this);
     }
 
     @Override
     public void onEnable() {
         // Plugin startup logic
 
-        //creates a gui and gui manager
-        this.guiManager = new CustomGUIManager(this);
+        //creates a gui
         CustomGUI gui = CustomGUI.Builder.newInstance()
                 .id("test gui")
                 .title("test.gui")
                 .guiListener(new GUIListener())
                 .build();
         this.guiManager.addInventory("test.gui", gui);
-
-        //registers listener to server to talk with the gui manager
-        this.inventoryListener = new InventoryListener(this, this.guiManager);
-        getServer().getPluginManager().registerEvents(this.inventoryListener,this);
 
         //loads all annotated commands (through reflection) from a supplied class
         this.manager.loadCommand(new TestCustomCommand());

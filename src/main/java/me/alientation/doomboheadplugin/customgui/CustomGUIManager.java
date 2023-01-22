@@ -3,6 +3,7 @@ package me.alientation.doomboheadplugin.customgui;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.alientation.doomboheadplugin.customgui.listeners.InventoryListener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,6 +18,8 @@ public class CustomGUIManager {
 	private final Map<Inventory,CustomGUI> INVENTORY_MAP;
 	private final JavaPlugin plugin;
 
+	private final InventoryListener inventoryListener;
+
 	/**
 	 * Constructs a GUI Manager for this plugin
 	 *
@@ -26,6 +29,10 @@ public class CustomGUIManager {
 		this.plugin = plugin;
 		this.GUI_MAP = new HashMap<>();
 		this.INVENTORY_MAP = new HashMap<>();
+
+		//registers listener to server to talk with the gui manager
+		this.inventoryListener = new InventoryListener(plugin, this);
+		plugin.getServer().getPluginManager().registerEvents(this.inventoryListener,plugin);
 	}
 	
 	/**
@@ -43,10 +50,10 @@ public class CustomGUIManager {
 	}
 
 	/**
+	 * Adds CustomGUI inventory and id key to mappings
 	 *
-	 *
-	 * @param inventory
-	 * @param id
+	 * @param id id of the CustomGUI
+	 * @param inventory CustomGUI inventory to be managed by this manager
 	 */
 	public void addInventory(String id, CustomGUI inventory) {
 		this.GUI_MAP.put(id, inventory);
@@ -63,5 +70,9 @@ public class CustomGUIManager {
 	
 	public CustomGUI getGUI(Inventory inv) {
 		return this.INVENTORY_MAP.get(inv);
+	}
+
+	public InventoryListener getInventoryListener() {
+		return this.inventoryListener;
 	}
 }

@@ -17,7 +17,7 @@ attributes of the blueprint (so like the blueprintID, title, size
 For specific GUIs like furnaces and brewing stands, allow user to annotate that
 in CustomGUIBluePrint -> detail the Inventory type
 
-
+Add console logging messages
 
 
 SlotTypes

@@ -30,23 +30,7 @@ public class CustomGUIManager {
 		this.GUI_MAP = new HashMap<>();
 		this.INVENTORY_MAP = new HashMap<>();
 
-		//registers listener to server to talk with the gui manager
 		this.inventoryListener = new InventoryListener(plugin, this);
-		plugin.getServer().getPluginManager().registerEvents(this.inventoryListener,plugin);
-	}
-	
-	/**
-	 * Loads in a specified GUI from server save file to prevent having to waste resources maintaining inventories
-	 */
-	public void load() {
-		
-	}
-	
-	/**
-	 * 
-	 */
-	public void save() {
-		
 	}
 
 	/**
@@ -56,6 +40,12 @@ public class CustomGUIManager {
 	 * @param inventory CustomGUI inventory to be managed by this manager
 	 */
 	public void addInventory(String id, CustomGUI inventory) {
+		if (inventoryListener == null) {
+			//registers listener to server to talk with the gui manager
+			plugin.getServer().getPluginManager().registerEvents(this.inventoryListener,plugin);
+		}
+
+
 		this.GUI_MAP.put(id, inventory);
 		this.INVENTORY_MAP.put(inventory.getInventory(), inventory);
 	}

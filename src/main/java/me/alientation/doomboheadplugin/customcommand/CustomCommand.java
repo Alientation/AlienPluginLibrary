@@ -554,7 +554,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 
 	public void setDescription(String description) {
 		this.description = description;
-		baseCommand.setDescription(description);
+		if (baseCommand != null) baseCommand.setDescription(description);
 	}
 
 	public String getUsage() {
@@ -563,7 +563,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 
 	public void setUsage(String usage) {
 		this.usage = usage;
-		this.baseCommand.setUsage(usage);
+		if (baseCommand != null) this.baseCommand.setUsage(usage);
 	}
 
 	public List<String> getAliases() {
@@ -572,18 +572,18 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 
 	public void clearAliases() {
 		this.aliases.clear();
-		this.baseCommand.setAliases(new ArrayList<>());
+		if (baseCommand != null) this.baseCommand.setAliases(new ArrayList<>());
 	}
 
 	public void addAlias(String alias) {
 		this.aliases.add(alias);
-		this.baseCommand.setAliases(this.aliases);
+		if (baseCommand != null) this.baseCommand.setAliases(this.aliases);
 	}
 
 	public void removeAlias(String alias) {
 		for (int i = 0; i < aliases.size(); i++)
 			if (aliases.get(i).equals(alias)) aliases.remove(i--);
-		this.baseCommand.setAliases(aliases);
+		if (baseCommand != null) this.baseCommand.setAliases(aliases);
 	}
 
 	public void setArguments(Argument[] arguments) {

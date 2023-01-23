@@ -29,7 +29,7 @@ public final class DoomboheadPlugin extends JavaPlugin {
                 .blueprintTitle("test.gui")
                 .blueprintGUIListener(new GUIListener())
                 .build();
-        this.guiManager.addInventory("test.gui", gui);
+        this.guiManager.addBlueprint("test.gui", gui);
 
         //loads all annotated commands (through reflection) from a supplied class
         this.manager.loadCommand(new TestCustomCommand());

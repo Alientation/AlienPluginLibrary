@@ -11,7 +11,10 @@ Implement parameter matching using parameter flag annotations
 
 Possible Bugs
 Get usage (and possible description) to work. it does not  display it when the onCommand method returns false
-Ordering of annotated commands in CustomCommandAPI extended class might cause bugs when reading in a method for a child command before the parent command is read in/loaded
 If command execute method doesn't return a boolean, it might crash or cause exception
 If there is no parent command defined but a child command is defined will not properly load in the parent command
 argument annotations haven't been tested nor has the conditions either
+
+MAJOR BUG
+Ordering of annotated commands in CustomCommandAPI extended class might cause bugs when reading in a
+method for a child command before the parent command is read in/loaded

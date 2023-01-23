@@ -6,25 +6,23 @@ import me.alientation.doomboheadplugin.customgui.exceptions.UnknownGUIException;
 import me.alientation.doomboheadplugin.customgui.exceptions.UnknownManagerException;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Links annotated methods with the Custom GUIs
  */
-public class CustomGUIAPI {
+public class CustomGUIBlueprintAPI {
 	
 	private final Map<String,Method> methodMap;
-	private CustomGUIManager manager;
+	private CustomGUIBlueprintManager manager;
 
-	public CustomGUIAPI(CustomGUIManager manager) {
+	public CustomGUIBlueprintAPI(CustomGUIBlueprintManager manager) {
 		this.methodMap = new HashMap<>();
 		registerManager(manager);
 	}
 	
-	public void registerManager(CustomGUIManager manager) {
+	public void registerManager(CustomGUIBlueprintManager manager) {
 		this.manager = manager;
 	}
 
@@ -38,7 +36,7 @@ public class CustomGUIAPI {
 		for (Method method : this.getClass().getDeclaredMethods()) {
 			if (method.isAnnotationPresent(GUIMarkerAnnotation.class) && method.isAnnotationPresent(SlotIDAnnotation.class)) {
 				String guiID = method.getAnnotation(GUIMarkerAnnotation.class).value();
-				CustomGUI gui = this.manager.getGUI(guiID);
+				CustomGUIBlueprint gui = this.manager.getGUI(guiID);
 
 				//gui does not exist yet
 				if (gui == null) throw new UnknownGUIException();
@@ -73,7 +71,7 @@ public class CustomGUIAPI {
 		return this.methodMap.get(id) != null;
 	}
 	
-	public CustomGUIManager getManager() {
+	public CustomGUIBlueprintManager getManager() {
 		return this.manager;
 	}
 }

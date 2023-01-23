@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents a slot in a CustomGUI inventory and actions associated with it
+ * Represents a slot in a CustomGUIBlueprint inventory and actions associated with it
  */
 public class ItemSlot {
 
@@ -16,7 +16,7 @@ public class ItemSlot {
 	private final int slotID;
 
 	//parent gui container
-	private final CustomGUI guiParent;
+	private final CustomGUIBlueprint guiParent;
 
 	//item represented at this slot
 	private ItemStack item;
@@ -26,7 +26,7 @@ public class ItemSlot {
 
 	static class Builder {
 		int slotID;
-		CustomGUI guiParent;
+		CustomGUIBlueprint guiParent;
 		ItemStack item;
 		Method actionMethod;
 
@@ -43,7 +43,7 @@ public class ItemSlot {
 			return this;
 		}
 
-		public Builder guiParent(CustomGUI guiParent) {
+		public Builder guiParent(CustomGUIBlueprint guiParent) {
 			this.guiParent = guiParent;
 			return this;
 		}
@@ -85,10 +85,10 @@ public class ItemSlot {
 	/**
 	 * Processes Item Click by using reflection to invoke the supplied action method
 	 *
-	 * @param gui CustomGUI where the click event happened
+	 * @param gui CustomGUIBlueprint where the click event happened
 	 * @param e Inventory click event
 	 */
-	public void onItemClick(CustomGUI gui, InventoryClickEvent e) {
+	public void onItemClick(CustomGUIBlueprint gui, InventoryClickEvent e) {
 		if (this.actionMethod == null) return;
 
 		Object[] params = new Object[this.actionMethod.getParameterCount()];
@@ -96,7 +96,7 @@ public class ItemSlot {
 
 		//TODO: Add parameter flag annotations so that the user can greater customize the parameters that get accepted
 		for (Class<?> c : this.actionMethod.getParameterTypes()) {
-			if (c == CustomGUI.class)	params[paramsIndex] = gui;
+			if (c == CustomGUIBlueprint.class)	params[paramsIndex] = gui;
 			else if (c == InventoryClickEvent.class) 	params[paramsIndex] = e;
 			else 							params[paramsIndex] = null;
 			paramsIndex++;
@@ -132,7 +132,7 @@ public class ItemSlot {
 		return this.slotID;
 	}
 	
-	public CustomGUI getGUIHolder() {
+	public CustomGUIBlueprint getGUIHolder() {
 		return this.guiParent;
 	}
 

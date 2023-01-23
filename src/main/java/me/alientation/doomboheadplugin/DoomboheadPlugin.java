@@ -2,8 +2,8 @@ package me.alientation.doomboheadplugin;
 
 import me.alientation.doomboheadplugin.customcommand.CustomCommandManager;
 import me.alientation.doomboheadplugin.customcommand.TestCustomCommand;
-import me.alientation.doomboheadplugin.customgui.CustomGUI;
-import me.alientation.doomboheadplugin.customgui.CustomGUIManager;
+import me.alientation.doomboheadplugin.customgui.CustomGUIBlueprint;
+import me.alientation.doomboheadplugin.customgui.CustomGUIBlueprintManager;
 import me.alientation.doomboheadplugin.customgui.commands.CustomGUICommand;
 import me.alientation.doomboheadplugin.customgui.listeners.GUIListener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,12 +11,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class DoomboheadPlugin extends JavaPlugin {
     private final CustomCommandManager manager;
 
-    private final CustomGUIManager guiManager;
+    private final CustomGUIBlueprintManager guiManager;
 
     public DoomboheadPlugin() {
         //initiate manager for this plugin on construction
         this.manager = new CustomCommandManager(this);
-        this.guiManager = new CustomGUIManager(this);
+        this.guiManager = new CustomGUIBlueprintManager(this);
     }
 
     @Override
@@ -24,10 +24,10 @@ public final class DoomboheadPlugin extends JavaPlugin {
         // Plugin startup logic
 
         //creates a gui
-        CustomGUI gui = CustomGUI.Builder.newInstance()
-                .id("test gui")
-                .title("test.gui")
-                .guiListener(new GUIListener())
+        CustomGUIBlueprint gui = CustomGUIBlueprint.Builder.newInstance()
+                .blueprintID("test gui")
+                .blueprintTitle("test.gui")
+                .blueprintGUIListener(new GUIListener())
                 .build();
         this.guiManager.addInventory("test.gui", gui);
 

@@ -1,8 +1,8 @@
 package me.alientation.doomboheadplugin.customgui;
 
-public class CustomGUITest extends CustomGUIAPI {
+public class CustomGUITest extends CustomGUIBlueprintAPI {
 
-    public CustomGUITest(CustomGUIManager manager) {
+    public CustomGUITest(CustomGUIBlueprintManager manager) {
         super(manager);
     }
 

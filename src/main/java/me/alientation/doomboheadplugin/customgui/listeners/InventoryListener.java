@@ -1,7 +1,7 @@
 package me.alientation.doomboheadplugin.customgui.listeners;
 
-import me.alientation.doomboheadplugin.customgui.CustomGUI;
-import me.alientation.doomboheadplugin.customgui.CustomGUIManager;
+import me.alientation.doomboheadplugin.customgui.CustomGUIBlueprint;
+import me.alientation.doomboheadplugin.customgui.CustomGUIBlueprintManager;
 import me.alientation.doomboheadplugin.customgui.ItemSlot;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 public class InventoryListener implements Listener {
 	
 	private final JavaPlugin plugin;
-	private final CustomGUIManager manager;
+	private final CustomGUIBlueprintManager manager;
 
 	/**
 	 * Constructs inventory listener specific to a gui manager
@@ -39,7 +39,7 @@ public class InventoryListener implements Listener {
 	 * @param plugin Java Plugin
 	 * @param manager GUI Manager
 	 */
-	public InventoryListener(JavaPlugin plugin, CustomGUIManager manager) {
+	public InventoryListener(JavaPlugin plugin, CustomGUIBlueprintManager manager) {
 		this.plugin = plugin;
 		this.manager = manager;
 	}
@@ -47,7 +47,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onInvClick(@NotNull InventoryClickEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
 		
@@ -65,7 +65,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onInventoryOpen(@NotNull InventoryOpenEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
 		
@@ -74,7 +74,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onInventoryClose(@NotNull InventoryCloseEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
 		
@@ -83,7 +83,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onBrewComplete(@NotNull BrewEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getContents());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getContents());
 		
 		if (gui == null) return;
 		
@@ -92,7 +92,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onCraftItem(@NotNull CraftItemEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
 		
@@ -101,7 +101,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onFurnaceExtract(@NotNull FurnaceExtractEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getPlayer().getOpenInventory().getTopInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getPlayer().getOpenInventory().getTopInventory());
 		
 		if (gui == null) return;
 		
@@ -110,7 +110,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onInventoryDrag(@NotNull InventoryDragEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
 		
@@ -119,7 +119,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerAction(@NotNull InventoryEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
 		
@@ -128,7 +128,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onInventoryInteract(@NotNull InventoryInteractEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
 		
@@ -137,7 +137,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onInventoryMoveItem(@NotNull InventoryMoveItemEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getSource());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getSource());
 		
 		if (gui != null)
 			gui.getGUIListener().onInventoryItemExit(gui,e);
@@ -155,7 +155,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onInventoryPickupItem(@NotNull InventoryPickupItemEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
 		
@@ -164,7 +164,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onAnvilInsert(@NotNull PrepareAnvilEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
 		
@@ -173,7 +173,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onCraftInsert(@NotNull PrepareItemCraftEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
 		
@@ -182,7 +182,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onSmithingInsert(@NotNull PrepareSmithingEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
 		
@@ -191,7 +191,7 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onSmithItem(@NotNull SmithItemEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
 		
@@ -200,13 +200,13 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onTradeSelect(@NotNull TradeSelectEvent e) {
-		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
 		
 		if (gui == null) return;
 		
 		gui.getGUIListener().onTradeSelect(gui,e);
 	}
 	
-	public CustomGUIManager getCustomGUIManager() { return this.manager; }
+	public CustomGUIBlueprintManager getCustomGUIManager() { return this.manager; }
 	public JavaPlugin getPlugin() { return this.plugin; }
 }

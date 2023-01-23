@@ -3,21 +3,21 @@ package me.alientation.doomboheadplugin.customgui.commands;
 import me.alientation.doomboheadplugin.customcommand.CustomCommandAPI;
 import me.alientation.doomboheadplugin.customcommand.annotations.commands.CommandAnnotation;
 import me.alientation.doomboheadplugin.customcommand.annotations.permissions.PermissionAnnotation;
-import me.alientation.doomboheadplugin.customgui.CustomGUIManager;
+import me.alientation.doomboheadplugin.customgui.CustomGUIBlueprintManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * Test command for CustomGUI
+ * Test command for CustomGUIBlueprint
  */
 public class CustomGUICommand extends CustomCommandAPI {
 	
-	private final CustomGUIManager guiManager;
+	private final CustomGUIBlueprintManager guiManager;
 	
-	public CustomGUICommand(CustomGUIManager guiManager) {
+	public CustomGUICommand(CustomGUIBlueprintManager guiManager) {
 		this.guiManager = guiManager;
 	}
-	
+
 	//todo FIGURE OUT WHY THE DEFAULT ON TAB COMPLETE ISN'T SHOWING THE SHOW SUBCOMMAND???
 
 	@CommandAnnotation(id = "customGUI", name = "customGUI", description = "commands for custom gui")

@@ -123,20 +123,10 @@ public class CustomCommandManager {
 		});
 	}
 
-	/**
-	 * Gets the command mapping
-	 *
-	 * @return custom command map
-	 */
-	public Map<String,CustomCommand> getCustomCommandMap() {
-		return this.CUSTOM_COMMAND_MAP;
+	public CustomCommand getCustomCommand(String commandID) {
+		return this.CUSTOM_COMMAND_MAP.get(commandID);
 	}
 
-	/**
-	 * Gets the Plugin
-	 *
-	 * @return returns the plugin
-	 */
 	public JavaPlugin getPlugin() {
 		return this.plugin;
 	}

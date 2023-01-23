@@ -234,34 +234,49 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		Bukkit.getPluginManager().callEvent(commandCallAttemptEvent);
 		System.out.println(command.getName() + " Command called with " + Arrays.toString(args) + " args");
 
-		if (this.disabled) commandCallAttemptEvent.setCancelled(true);
-		System.out.println("Cancelled because command is disabled");
+		if (this.disabled) {
+			System.out.println("Cancelled because command is disabled");
+			commandCallAttemptEvent.setCancelled(true);
+		}
 
 		//command call is cancelled
-		System.out.println("Checking if command call attempt event is cancelled");
-		if (commandCallAttemptEvent.isCancelled()) return !commandCallAttemptFail(sender,command,label,args);
+		if (commandCallAttemptEvent.isCancelled()) {
+			System.out.println("Command Call Event was cancelled");
+			return !commandCallAttemptFail(sender,command,label,args);
+		}
 
 		//sender doesn't have permissions
-		System.out.println("Checking if sender has permissions");
-		if (!hasPermissions(sender)) return !invalidPermissions(sender,command,label,args);
+		if (!hasPermissions(sender)) {
+			System.out.println("Sender does not have permissions");
+			return !invalidPermissions(sender,command,label,args);
+		}
 
 		//check if command has enough arguments passed
-		System.out.println("Checking if sender passed enough arguments");
-		if (args.length < arguments.length) return !invalidArgumentCount(sender,command,label,args);
+		if (args.length < arguments.length) {
+			System.out.println("Sender has not passed enough arguments");
+			return !invalidArgumentCount(sender,command,label,args);
+		}
 
 		//check if command arguments pass the condition checks
-		System.out.println("Checking if sender passed appropriate arguments"); //todo incorporate optional arguments into these checks (if there is optional arguments, this means there should not be further children
+		//todo incorporate optional arguments into these checks (if there is optional arguments, this means there should not be further children
 		for (int argIndex = 0; argIndex < arguments.length; argIndex++)
-			if (!arguments[argIndex].doesMatchCondition(sender,command,label,args[argIndex])) return !invalidArgument(sender,command,label,args[argIndex], arguments[argIndex]);
+			if (!arguments[argIndex].doesMatchCondition(sender,command,label,args[argIndex])) {
+				System.out.println("Sender has not passed appropriate arguments");
+				return !invalidArgument(sender,command,label,args[argIndex], arguments[argIndex]);
+			}
 
 		//processes down the argument pathway if there exists a children command
-		System.out.println("Checking if there is a child command");
 		CustomCommand child = args.length > arguments.length ? getChildrenByName(args[arguments.length]) : null;
-		if (child != null) return child.onCommand(sender, command, label, removeFirst(args, 1 + arguments.length));
+		if (child != null) {
+			System.out.println("There is a child command");
+			return child.onCommand(sender, command, label, removeFirst(args, 1 + arguments.length));
+		}
 
 		//no linked on command method
-		System.out.println("Checking if command is invalid");
-		if (this.commandMethod == null) return !invalidCommand(sender,command,label,args);
+		if (this.commandMethod == null) {
+			System.out.println("Command has no execute method invalid");
+			return !invalidCommand(sender,command,label,args);
+		}
 
 		System.out.println("Passed all checks, proceeding to invoking command");
 
@@ -760,7 +775,10 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		StringBuilder children = new StringBuilder("{");
 		for (CustomCommand customCommand : this.children)
 			children.append(customCommand).append(",");
-		children.deleteCharAt(children.length()-1).append("}");
+		children.deleteCharAt(children.length()-1);
+
+		if (this.children.size() != 0)
+			children.append("}");
 
 		return this.getName() + "@" + this.id + " " + children;
 	}

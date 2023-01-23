@@ -8,6 +8,13 @@ import java.lang.annotation.Target;
 
 @Retention(RUNTIME)
 @Target(METHOD)
-public @interface GUIMarkerAnnotation {
-	String value();
+public @interface ItemSlotAnnotation {
+	Class<Object> BASE_CLASS = Object.class;
+	String blueprintID();
+	int slotID();
+
+	//todo ItemStack annotation
+
+	String actionMethod() default "";
+	Class<?> actionClass() default BASE_CLASS;
 }

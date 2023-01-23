@@ -1,7 +1,7 @@
 package me.alientation.doomboheadplugin.customgui;
 
-import me.alientation.doomboheadplugin.customgui.annotations.GUIMarkerAnnotation;
-import me.alientation.doomboheadplugin.customgui.annotations.SlotIDAnnotation;
+import me.alientation.doomboheadplugin.customgui.annotations.CustomGUIBlueprintAnnotation;
+import me.alientation.doomboheadplugin.customgui.annotations.ItemSlotAnnotation;
 import me.alientation.doomboheadplugin.customgui.exceptions.UnknownGUIException;
 import me.alientation.doomboheadplugin.customgui.exceptions.UnknownManagerException;
 
@@ -34,16 +34,16 @@ public class CustomGUIBlueprintAPI {
 			throw new UnknownManagerException();
 		
 		for (Method method : this.getClass().getDeclaredMethods()) {
-			if (method.isAnnotationPresent(GUIMarkerAnnotation.class) && method.isAnnotationPresent(SlotIDAnnotation.class)) {
-				String guiID = method.getAnnotation(GUIMarkerAnnotation.class).value();
+			if (method.isAnnotationPresent(CustomGUIBlueprintAnnotation.class) && method.isAnnotationPresent(ItemSlotAnnotation.class)) {
+				String guiID = method.getAnnotation(CustomGUIBlueprintAnnotation.class).blueprintID();
 				CustomGUIBlueprint gui = this.manager.getGUI(guiID);
 
 				//gui does not exist yet
 				if (gui == null) throw new UnknownGUIException();
 
 				//registers slots
-				for (SlotIDAnnotation slotIDAnnotation : method.getAnnotationsByType(SlotIDAnnotation.class)) {
-					int slotID = slotIDAnnotation.value();
+				for (ItemSlotAnnotation itemSlotAnnotation : method.getAnnotationsByType(ItemSlotAnnotation.class)) {
+					int slotID = itemSlotAnnotation.slotID();
 
 					if (gui.isOutOfBounds(slotID)) throw new IndexOutOfBoundsException("slot " + slotID + " out of bounds of " + gui);
 					if (gui.getSlot(slotID) != null) throw new IllegalStateException("slot " + slotID + " already present in " + gui);

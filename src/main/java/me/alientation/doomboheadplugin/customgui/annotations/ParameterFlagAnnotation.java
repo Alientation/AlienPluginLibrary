@@ -9,5 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface ParameterFlagAnnotation {
+	//this will be almost a duplicate of the CustomCommand parameter flag annotation
 	String value();
 }

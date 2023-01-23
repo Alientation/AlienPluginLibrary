@@ -8,16 +8,19 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Manages GUIs
+ * Manages GUIBlueprints
  */
 public class CustomGUIBlueprintManager {
 	
 
-	//Stores CustomGUIBlueprint mappings
+	//map of blueprint id to blueprint
 	private final Map<String, CustomGUIBlueprint> GUI_MAP;
+
+	//map of inventory object to blueprint
 	private final Map<Inventory, CustomGUIBlueprint> INVENTORY_MAP;
 	private final JavaPlugin plugin;
 
+	//the listener to Bukkit events to forward those events to the appropriate custom gui
 	private InventoryListener inventoryListener;
 
 	/**

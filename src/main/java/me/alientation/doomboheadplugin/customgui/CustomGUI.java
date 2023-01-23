@@ -8,19 +8,26 @@ import org.bukkit.inventory.Inventory;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents a copy of a CustomGUIBlueprint
+ */
 public class CustomGUI {
 
+    //id of this blueprint copy
     private final String guiID;
 
+    //title to be displayed
     private final String guiTitle;
 
+    //the parent blueprint
     private final CustomGUIBlueprint guiBlueprint;
 
+    //inventory that holds this gui
     private final Inventory inventory;
-
 
     //map of slot location to ItemSlot
     private final Map<Integer, ItemSlot> slotsMap = new HashMap<>();
+
 
     public static class Builder {
 
@@ -61,7 +68,11 @@ public class CustomGUI {
         }
     }
 
-
+    /**
+     * Builds using Builder pattern
+     *
+     * @param builder Builder pattern
+     */
     public CustomGUI(Builder builder) {
         this.guiID = builder.guiTitle;
         this.guiTitle = builder.guiTitle;
@@ -94,6 +105,12 @@ public class CustomGUI {
         return slotsMap.get(index);
     }
 
+    /**
+     * Updates slot map for the given index and the inventory
+     *
+     * @param index Index of the updated slot
+     * @param item New slot
+     */
     public void setSlot(int index, ItemSlot item) {
         if (guiBlueprint.isOutOfBounds(index)) throw new IndexOutOfBoundsException("Index " + index + " out of bounds in " + this);
 

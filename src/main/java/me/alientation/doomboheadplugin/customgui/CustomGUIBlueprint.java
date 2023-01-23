@@ -10,9 +10,6 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a GUI based within a chest inventory and handles functionality like button clicks
- * <p>
- * todo have general gui that keeps functionality across all players but shows different stuff to each (sort of like sky block backpacks)
- *
  */
 public class CustomGUIBlueprint {
 	public static final String MAIN_COPY_ID = "CustomGUI Blueprint Main Copy";
@@ -38,7 +35,11 @@ public class CustomGUIBlueprint {
 	//copies of this blueprint
 	private final Map<String,CustomGUI> guiCopies;
 
+	//when opened, whether to open a copy that is relative to the player's name or just the main copy
 	private final boolean copiesUniqueToPlayer;
+
+	//automatically safe deletes the previous copy if there is one, essentially overriding past copies
+	private final boolean allowOverridingCopies;
 
 
 	public static class Builder {
@@ -47,7 +48,7 @@ public class CustomGUIBlueprint {
 		InventoryType blueprintInventoryType;
 		int size;
 		GUIListener blueprintGUIListener;
-		boolean copiesUniqueToPlayer;
+		boolean copiesUniqueToPlayer, allowOverridingCopies;
 		public Builder() {
 			blueprintInventoryType = InventoryType.CHEST;
 			size = 54;
@@ -103,6 +104,15 @@ public class CustomGUIBlueprint {
 			return copiesUniqueToPlayer(true);
 		}
 
+		public Builder allowOverridingCopies(boolean allowOverridingCopies) {
+			this.allowOverridingCopies = allowOverridingCopies;
+			return this;
+		}
+
+		public Builder allowOverridingCopies() {
+			return allowOverridingCopies(true);
+		}
+
 		public void verify() {
 			if (blueprintID == null) throw new IllegalStateException("GUI id cannot be null");
 
@@ -132,29 +142,55 @@ public class CustomGUIBlueprint {
 		this.guiCopies = builder.guiCopies;
 
 		this.copiesUniqueToPlayer = builder.copiesUniqueToPlayer;
+		this.allowOverridingCopies = builder.allowOverridingCopies;
 
 		newCopy(MAIN_COPY_ID);
 	}
 
+	/**
+	 * Registers a manager to this blueprint
+	 *
+	 * @param manager CustomGUIBlueprint manager
+	 */
 	public void registerManager(CustomGUIBlueprintManager manager) {
 		if (this.manager != null) throw new IllegalStateException("This Blueprint's manager has already been registered!");
+
+
 		this.manager = manager;
 
+		//registers existing child copies to the manager
 		for (CustomGUI copy : guiCopies.values()) manager.registerBlueprintCopy(copy.getInventory(),this);
 	}
 
+	/**
+	 * Creates a new copy of this blueprint
+	 *
+	 * @param guiID id of the blueprint copy
+	 * @return the blueprint copy
+	 */
 	public CustomGUI newCopy(String guiID) {
-		if (guiCopies.containsKey(guiID))
-			throw new IllegalStateException("GUIBlueprint copy " + guiID + " already exists! Delete the copy before creating a new one");
+		//safety checks, make user delete copy first
+		if (guiCopies.containsKey(guiID)) {
+			if (allowOverridingCopies) deleteCopy(guiID);
+			else throw new IllegalStateException("GUIBlueprint copy " + guiID + " already exists! Delete the copy before creating a new one");
+		}
 
+		//creates a new copy of this blueprint and maps it to the guiID
 		CustomGUI newCopy = CustomGUI.Builder.newInstance().guiID(guiID).guiBlueprint(this).build();
 		this.guiCopies.put(guiID,newCopy);
 
-		manager.registerBlueprintCopy(newCopy.getInventory(), this);
+		//registers the blueprint copy's inventory to this blueprint in the manager
+		if (manager != null) manager.registerBlueprintCopy(newCopy.getInventory(), this);
 
 		return newCopy;
 	}
 
+	/**
+	 * Deletes copy from the guiCopies and unregisters from the manager to remove all references to the copy and allow garbage collection to do its thing
+	 *
+	 * @param guiID id of the copy to be deleted
+	 * @return the deleted copy
+	 */
 	public CustomGUI deleteCopy(String guiID) {
 		if (this.guiCopies.get(guiID) == null) throw new IllegalStateException("GUICopy " + guiID + " does not exist!");
 
@@ -166,7 +202,12 @@ public class CustomGUIBlueprint {
 		return guiCopies.get(guiID);
 	}
 
-	public void open(@NotNull Player player) { //todo have more options to specific how specific a blueprint copy is (ex. per team, per server)
+	/**
+	 * Opens the inventory for the player depending on the settings of this blueprint
+	 * todo have more options to specific how specific a blueprint copy is (ex. per team, per server)
+	 * @param player Player to open an inventory
+	 */
+	public void open(@NotNull Player player) {
 		if (copiesUniqueToPlayer) {
 			CustomGUI playerSpecificCopy = getCopy(player.getName());
 			if (playerSpecificCopy == null) playerSpecificCopy = newCopy(player.getName());
@@ -184,8 +225,14 @@ public class CustomGUIBlueprint {
 	public ItemSlot getSlot(int index) {
 		return blueprintSlotsMap.get(index);
 	}
-	
-	public void setSlot(int index, ItemSlot item) { //todo itemslot states such as frozen to prevent these modifications?
+
+	/**
+	 * Updates the slot for the blueprint and all children copies
+	 * todo itemslot states such as frozen to prevent these modifications?
+	 * @param index index of the slot to be replaced
+	 * @param item the new item slot
+	 */
+	public void setSlot(int index, ItemSlot item) {
 		if (isOutOfBounds(index)) throw new IndexOutOfBoundsException("Index " + index + " out of bounds in " + this);
 
 		this.blueprintSlotsMap.put(index, item);

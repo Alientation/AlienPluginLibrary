@@ -108,19 +108,39 @@ public class CustomCommandAPI {
 			//maps method to command pathway
 			this.methodMap.put("@commandAnnotation@" + commandAnnotation.id(), method);
 
-			//build command (guaranteed to not have been initialized before)
-			CustomCommand.Builder builder = CustomCommand.Builder.newInstance();
-			builder.manager(commandManager)
-					.id(commandID)
-					.name(commandName)
-					.description(commandDescription)
-					.usage(commandUsage)
-					.aliases(commandAliases)
-					.arguments(arguments)
-					.permissions(commandPermissions)
-					.requiredPermissions(requiredCommandPermissions);
+			CustomCommand command;
 
-			CustomCommand command = builder.build();
+			//command already exists
+			if (commandManager.getCustomCommand(commandID) != null) {
+				command = commandManager.getCustomCommand(commandID);
+
+				command.setDescription(commandDescription);
+				command.setUsage(commandUsage);
+				command.clearAliases();
+				for (String alias : commandAliases) command.addAlias(alias);
+				command.setArguments(arguments);
+				command.clearPermissions();
+				command.clearRequiredPermissions();
+				for (String permission : commandPermissions) command.addPermission(permission);
+				for (String requiredPermission : requiredCommandPermissions) command.addRequiredPermission(requiredPermission);
+
+			} else {
+				//build command
+				CustomCommand.Builder builder = CustomCommand.Builder.newInstance();
+				builder.manager(commandManager)
+						.id(commandID)
+						.name(commandName)
+						.description(commandDescription)
+						.usage(commandUsage)
+						.aliases(commandAliases)
+						.arguments(arguments)
+						.permissions(commandPermissions)
+						.requiredPermissions(requiredCommandPermissions);
+
+				command = builder.build();
+			}
+
+			//maps command and registers and children if needed
 			this.commandManager.mapCommand(command);
 
 			System.out.println("Registering Command Method " + command);
@@ -173,7 +193,7 @@ public class CustomCommandAPI {
 	 * @return Custom Command
 	 */
 	private CustomCommand getCommand(String commandID, String commandName) {
-		CustomCommand command = this.commandManager.getCustomCommandMap().get(commandID);
+		CustomCommand command = this.commandManager.getCustomCommand(commandID);
 
 		if (command == null) {
 			command = CustomCommand.Builder.newInstance().name(commandName).id(commandID)

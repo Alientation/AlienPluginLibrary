@@ -48,7 +48,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	private final Set<String> requiredPermissions;
 
 	//arguments for the command
-	private final Argument[] arguments;
+	private Argument[] arguments;
 
 
 	//The parent command. For example the command /help list -> help
@@ -584,6 +584,10 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		for (int i = 0; i < aliases.size(); i++)
 			if (aliases.get(i).equals(alias)) aliases.remove(i--);
 		this.baseCommand.setAliases(aliases);
+	}
+
+	public void setArguments(Argument[] arguments) {
+		this.arguments = arguments;
 	}
 
 	/**

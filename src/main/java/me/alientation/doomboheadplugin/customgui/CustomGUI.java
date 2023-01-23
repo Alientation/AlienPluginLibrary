@@ -1,161 +1,113 @@
 package me.alientation.doomboheadplugin.customgui;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import me.alientation.doomboheadplugin.customgui.listeners.GUIListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.jetbrains.annotations.NotNull;
 
-/**
- * Represents a GUI based within a chest inventory and handles functionality like button clicks
- *
- * todo have general gui that keeps functionality across all players but shows different stuff to each (sort of like sky block backpacks)
- *
- */
+import java.util.HashMap;
+import java.util.Map;
+
 public class CustomGUI {
 
-	//id of the custom gui
-	private final String id;
+    private final String guiID;
 
-	//title of the bukkit inventory
-	private final String title;
+    private final String guiTitle;
 
-	//bukkit inventory that holds the gui
-	private final Inventory inventory;
+    private final CustomGUIBlueprint guiBlueprint;
 
-	//size of the bukkit inventory
-	private final int size;
+    private final Inventory inventory;
 
-	//attached listener so that this gui can listen to events
-	private final GUIListener guiListener;
 
-	//map of slot location to ItemSlot
-	private final Map<Integer, ItemSlot> slotsMap = new HashMap<>();
+    //map of slot location to ItemSlot
+    private final Map<Integer, ItemSlot> slotsMap = new HashMap<>();
 
-	public static class Builder {
-		String id, title;
-		Inventory inventory;
-		InventoryType inventoryType;
-		int size;
-		GUIListener guiListener;
-		public Builder() {
-			size = 54;
-		}
+    public static class Builder {
 
-		public static Builder newInstance() {
-			return new Builder();
-		}
+        String guiID, guiTitle;
+        CustomGUIBlueprint guiBlueprint;
 
-		public Builder id(String id) {
-			this.id = id;
-			return this;
-		}
+        public Builder() {
 
-		public Builder title(String title) {
-			this.title = title;
-			return this;
-		}
+        }
 
-		public Builder inventory(Inventory inventory) {
-			this.inventory = inventory;
-			return this;
-		}
+        public static Builder newInstance() {
+            return new Builder();
+        }
 
-		public Builder inventoryType(InventoryType inventoryType) {
-			this.inventoryType = inventoryType;
-			return this;
-		}
+        public Builder guiID(String guiID) {
+            this.guiID = guiID;
+            return this;
+        }
 
-		public Builder size(int size) {
-			this.size = size;
-			return this;
-		}
+        public Builder guiTitle(String guiTitle) {
+            this.guiTitle = guiTitle;
+            return this;
+        }
 
-		public Builder guiListener(GUIListener guiListener) {
-			this.guiListener = guiListener;
-			return this;
-		}
+        public Builder guiBlueprint(CustomGUIBlueprint guiBlueprint) {
+            this.guiBlueprint = guiBlueprint;
+            if (this.guiTitle == null) this.guiTitle = guiBlueprint.getBlueprintTitle();
+            return this;
+        }
 
-		public void verify() {
-			if (id == null) throw new IllegalStateException("GUI id cannot be null");
+        public void verify() {
+            if (this.guiID == null) throw new IllegalStateException("guiID cannot be null");
+            if (this.guiBlueprint == null) throw new IllegalStateException("guiBlueprint cannot be null");
+        }
 
-			//inventory type chest, size must be multiple of 9
-			if (useChestInventoryType() && (size == 0 || size % 9 != 0 || size > 54)) throw new IllegalStateException("GUI size must be multiple of 9 to 54 for a InventoryType chest");
-			if (inventory == null && useChestInventoryType()) inventory = Bukkit.createInventory(null, size, title);
+        public CustomGUI build() {
+            return new CustomGUI(this);
+        }
+    }
 
-			//other inventory type, size must not be initialized through the builder todo perhaps a warning would be better instead of a crash
-			if (inventory == null && size != 0) throw new IllegalStateException("Size should not be initialized for an inventory created from an InventoryType " + inventoryType);
-			if (inventory == null) inventory = Bukkit.createInventory(null, inventoryType, title);
-		}
 
-		private boolean useChestInventoryType() {
-			return inventoryType == null || inventoryType == InventoryType.CHEST;
-		}
+    public CustomGUI(Builder builder) {
+        this.guiID = builder.guiTitle;
+        this.guiTitle = builder.guiTitle;
+        this.guiBlueprint = builder.guiBlueprint;
 
-		public CustomGUI build() {
-			verify();
-			return new CustomGUI(this);
-		}
-	}
+        if (guiBlueprint.getBlueprintInventoryType() == InventoryType.CHEST)
+            this.inventory = Bukkit.createInventory(null, guiBlueprint.size(), guiTitle);
+        else
+            this.inventory = Bukkit.createInventory(null, guiBlueprint.getBlueprintInventoryType(), guiTitle);
+    }
 
-	/**
-	 * Constructs a custom GUI using Builder pattern
-	 *
-	 * @param builder builder pattern
-	 */
-	public CustomGUI(@NotNull Builder builder) {
-		this.id = builder.id;
-		this.inventory = builder.inventory;
-		this.title = builder.title;
-		this.size = builder.size;
-		this.guiListener = builder.guiListener;
-	}
+    public String getGuiID() {
+        return guiID;
+    }
 
-	public void open(@NotNull Player player) {
-		player.openInventory(this.inventory);
-	}
+    public String getGuiTitle() {
+        return guiTitle;
+    }
 
-	public boolean isOutOfBounds(int index) {
-		return index >= size();
-	}
+    public CustomGUIBlueprint getGuiBlueprint() {
+        return guiBlueprint;
+    }
 
-	public ItemSlot getSlot(int index) {
-		return slotsMap.get(index);
-	}
-	
-	public void setSlot(int index, ItemSlot item) {
-		if (isOutOfBounds(index)) throw new IndexOutOfBoundsException("Index " + index + " out of bounds in " + this);
+    public Inventory getInventory() {
+        return inventory;
+    }
 
-		this.inventory.setItem(index, item.getItem());
-		this.slotsMap.put(index, item);
-	}
-	
-	public String getID() {
-		return this.id;
-	}
-	
-	public Inventory getInventory() { 
-		return this.inventory;
-	}
-	
-	public String getTitle() {
-		return this.title;
-	}
-	
-	public int size() {
-		return this.size;
-	}
-	
-	public GUIListener getGUIListener() {
-		return this.guiListener;
-	}
+    public ItemSlot getSlot(int index) {
+        if (getGuiBlueprint().isOutOfBounds(index)) throw new IndexOutOfBoundsException("Index " + index + " is out of bounds of " + this);
+        return slotsMap.get(index);
+    }
 
-	@Override
-	public String toString() {
-		return "CustomGUI:CHEST" + size + "(" + id + " | " + title + ")";
-	}
+    public void setSlot(int index, ItemSlot item) {
+        if (guiBlueprint.isOutOfBounds(index)) throw new IndexOutOfBoundsException("Index " + index + " out of bounds in " + this);
+
+        this.slotsMap.put(index, item);
+
+        this.inventory.setItem(index,item.getItem());
+    }
+
+    public void open(Player player) {
+        player.openInventory(inventory);
+    }
+
+    @Override
+    public String toString() {
+        return guiID + "@" + guiTitle + ":" + guiBlueprint;
+    }
 }

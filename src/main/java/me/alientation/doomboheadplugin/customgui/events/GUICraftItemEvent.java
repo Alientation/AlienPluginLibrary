@@ -1,6 +1,6 @@
 package me.alientation.doomboheadplugin.customgui.events;
 
-import me.alientation.doomboheadplugin.customgui.CustomGUI;
+import me.alientation.doomboheadplugin.customgui.CustomGUIBlueprint;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -13,17 +13,17 @@ public class GUICraftItemEvent  extends Event implements Cancellable {
 	private static final HandlerList HANDLERS = new HandlerList();
 	private boolean isCancelled;
 	
-	private CustomGUI customGUI;
+	private CustomGUIBlueprint customGUIBlueprint;
 	private InventoryClickEvent event;
 	
 	
-	public GUICraftItemEvent(CustomGUI customGUI, InventoryClickEvent e) {
-		this.customGUI = customGUI;
+	public GUICraftItemEvent(CustomGUIBlueprint customGUIBlueprint, InventoryClickEvent e) {
+		this.customGUIBlueprint = customGUIBlueprint;
 		this.event = e;
 	}
 	
-	public CustomGUI getCustomGUI() {
-		return this.customGUI;
+	public CustomGUIBlueprint getCustomGUI() {
+		return this.customGUIBlueprint;
 	}
 	
 	public InventoryClickEvent getEvent() {

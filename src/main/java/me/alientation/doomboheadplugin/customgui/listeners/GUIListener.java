@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.alientation.doomboheadplugin.customgui.CustomGUI;
+import me.alientation.doomboheadplugin.customgui.CustomGUIBlueprint;
 import me.alientation.doomboheadplugin.customgui.annotations.EventHandler;
 import me.alientation.doomboheadplugin.customgui.annotations.ParameterFlagAnnotation;
 import me.alientation.doomboheadplugin.customgui.exceptions.InvalidMethodException;
@@ -92,79 +92,79 @@ public class GUIListener {
 		return this.methodMap;
 	}
 	
-	public void onPlayerInventoryClick(CustomGUI gui, InventoryClickEvent e) {
+	public void onPlayerInventoryClick(CustomGUIBlueprint gui, InventoryClickEvent e) {
 
 	}
 	
-	public void onGUIClick(CustomGUI gui, InventoryClickEvent e) {
+	public void onGUIClick(CustomGUIBlueprint gui, InventoryClickEvent e) {
 		
 	}
 	
-	public void onOpen(CustomGUI gui, InventoryOpenEvent e) {
+	public void onOpen(CustomGUIBlueprint gui, InventoryOpenEvent e) {
 		
 	}
 	
-	public void onClose(CustomGUI gui, InventoryCloseEvent e) {
+	public void onClose(CustomGUIBlueprint gui, InventoryCloseEvent e) {
 		
 	}
 	
-	public void onBrewComplete(CustomGUI gui, BrewEvent e) {
+	public void onBrewComplete(CustomGUIBlueprint gui, BrewEvent e) {
 		
 	}
 	
-	public void onCraftItem(CustomGUI gui, CraftItemEvent e) {
+	public void onCraftItem(CustomGUIBlueprint gui, CraftItemEvent e) {
 		
 	}
 	
-	public void onFurnaceExtract(CustomGUI gui, FurnaceExtractEvent e) {
+	public void onFurnaceExtract(CustomGUIBlueprint gui, FurnaceExtractEvent e) {
 		
 	}
 	
-	public void onInventoryDrag(CustomGUI gui, InventoryDragEvent e) {
+	public void onInventoryDrag(CustomGUIBlueprint gui, InventoryDragEvent e) {
 		
 	}
 	
-	public void onPlayerAction(CustomGUI gui, InventoryEvent e) {
+	public void onPlayerAction(CustomGUIBlueprint gui, InventoryEvent e) {
 		
 	}
 	
-	public void onInventoryInteract(CustomGUI gui, InventoryInteractEvent e) {
+	public void onInventoryInteract(CustomGUIBlueprint gui, InventoryInteractEvent e) {
 		
 	}
 	
-	public void onInventoryItemExit(CustomGUI gui, InventoryMoveItemEvent e) {
+	public void onInventoryItemExit(CustomGUIBlueprint gui, InventoryMoveItemEvent e) {
 		
 	}
 	
-	public void onInventoryItemEnter(CustomGUI gui, InventoryMoveItemEvent e) {
+	public void onInventoryItemEnter(CustomGUIBlueprint gui, InventoryMoveItemEvent e) {
 		
 	}
 	
-	public void onInventoryItemMoveInitated(CustomGUI gui, InventoryMoveItemEvent e) {
+	public void onInventoryItemMoveInitated(CustomGUIBlueprint gui, InventoryMoveItemEvent e) {
 		
 	}
 	
-	public void onInventoryPickupItem(CustomGUI gui, InventoryPickupItemEvent e) {
+	public void onInventoryPickupItem(CustomGUIBlueprint gui, InventoryPickupItemEvent e) {
 		
 	}
 	
-	public void onAnvilInsert(CustomGUI gui, PrepareAnvilEvent e) {
+	public void onAnvilInsert(CustomGUIBlueprint gui, PrepareAnvilEvent e) {
 		
 	}
 	
-	public void onCraftInsert(CustomGUI gui, PrepareItemCraftEvent e) {
+	public void onCraftInsert(CustomGUIBlueprint gui, PrepareItemCraftEvent e) {
 		
 	}
 	
-	public void onSmithingInsert(CustomGUI gui, PrepareSmithingEvent e) {
+	public void onSmithingInsert(CustomGUIBlueprint gui, PrepareSmithingEvent e) {
 		
 	}
 	
-	public void onSmithItem(CustomGUI gui, SmithItemEvent e) {
+	public void onSmithItem(CustomGUIBlueprint gui, SmithItemEvent e) {
 		
 	}
 	
-	public void onTradeSelect(CustomGUI gui, TradeSelectEvent e) {
+	public void onTradeSelect(CustomGUIBlueprint gui, TradeSelectEvent e) {
 		
 	}
 	

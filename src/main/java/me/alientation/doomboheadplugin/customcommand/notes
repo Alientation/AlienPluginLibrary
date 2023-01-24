@@ -13,3 +13,27 @@ Possible Bugs
 Get usage (and possible description) to work. it does not  display it when the onCommand method returns false
 If command execute method doesn't return a boolean, it might crash or cause exception
 argument annotations haven't been tested nor has the conditions either
+
+
+
+
+Implement Dependency Injection Pattern
+
+
+CommandAlias should be an alternate unique id that also refers to the current command
+instead of an alternate command name
+
+perform checks for duplicate command ids
+
+Dependency Injection for command executors and tab complete (essentially parameter flagging)
+
+CatchUnknownCommandAnnotation catches any non valid child command that attempted to be executed
+CatchInvalidArgumentAnnotation
+
+CommandCompletionAnnotation just lists out hardcoded completion options
+
+Able to register own conditions
+
+
+RETHINK HOW A COMMAND SHOULD BE REPRESENTED USING ANNOTATIONS
+PARTICULARLY, HAVE ALL SUB COMMANDS IN THE SAME CLASS, THE CLASS BEING THE PARENT COMMAND

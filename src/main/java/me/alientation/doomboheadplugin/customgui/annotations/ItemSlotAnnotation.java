@@ -9,12 +9,12 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(METHOD)
 public @interface ItemSlotAnnotation {
-	Class<Object> BASE_CLASS = Object.class;
+	Class<?> BASE_CLASS = Object.class;
 	String blueprintID();
 	int slotID();
 
 	//todo ItemStack annotation
 
 	String actionMethod() default "";
-	Class<?> actionClass() default BASE_CLASS;
+	Class<?> actionClass() default Object.class;
 }

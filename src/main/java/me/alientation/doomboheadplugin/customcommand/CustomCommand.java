@@ -73,7 +73,16 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 
 	//whether to show aliases as possible tab completions
 	private boolean showAliasesInTabCompletion;
-	private boolean visible;
+
+	//perhaps move this attribute to the subcommand and instead ask the subcommand whether to show it to the player on tab completion
+	private boolean showHiddenSubcommandsInTabCompletion;//todo
+
+	//perhaps move this attribute to the subcommand and instead ask the subcommand whether to show it to the player on tab completion
+	private boolean showDisabledSubcommandsInTabCompletion;//todo
+
+	//perhaps move this attribute to the subcommand and instead ask the subcommand whether to show it to the player on tab completion
+	private boolean showSubcommandsRegardlessOfPermissionsInTabCompletion;//todo
+	private boolean visible; //todo change this to hidden, so invert the usages
 	private boolean disabled;
 	private boolean ignorePermissions;
 

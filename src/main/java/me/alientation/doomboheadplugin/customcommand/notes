@@ -16,10 +16,6 @@ argument annotations haven't been tested nor has the conditions either
 
 
 
-
-Implement Dependency Injection Pattern
-
-
 CommandAlias should be an alternate unique id that also refers to the current command
 instead of an alternate command name
 
@@ -34,6 +30,3 @@ CommandCompletionAnnotation just lists out hardcoded completion options
 
 Able to register own conditions
 
-
-RETHINK HOW A COMMAND SHOULD BE REPRESENTED USING ANNOTATIONS
-PARTICULARLY, HAVE ALL SUB COMMANDS IN THE SAME CLASS, THE CLASS BEING THE PARENT COMMAND

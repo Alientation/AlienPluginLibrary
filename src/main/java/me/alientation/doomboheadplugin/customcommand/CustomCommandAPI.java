@@ -13,6 +13,7 @@ import me.alientation.doomboheadplugin.customcommand.annotations.commands.Comman
 import me.alientation.doomboheadplugin.customcommand.annotations.permissions.PermissionAnnotation;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Class to be extended to contain annotated commands
@@ -56,34 +57,12 @@ public class CustomCommandAPI {
 		//looks for command declarations before checking tab complete
 		for (Method method : this.getClass().getDeclaredMethods()) {
 			if (!method.isAnnotationPresent(CommandAnnotation.class)) continue;
+
+
 			//annotated command arguments
-			CommandArgumentAnnotation[] commandArgumentAnnotation = method.getAnnotationsByType(CommandArgumentAnnotation.class);
-			Argument[] arguments = new Argument[commandArgumentAnnotation.length];
-
-			for (int i = 0; i < commandArgumentAnnotation.length; i++) {
-				CommandArgumentAnnotation arg = commandArgumentAnnotation[i];
-
-				if (arg.customCondition().matchConditionClass() == CommandArgumentCustomConditionAnnotation.BASE_CLASS) {
-					//not custom argument
-					arguments[i] = new Argument(arg.name(),arg.description(),arg.usage(),
-							Argument.extractMatchConditions(arg.condition().matchCondition()),
-							arg.optional(), arg.condition().checkValidPlayerName(), arg.condition().checkValidInteger(),
-							arg.condition().checkValidFloat(), arg.condition().minNumber(), arg.condition().maxNumber());
-					continue;
-				}
-
-				Method matchConditionMethod = null;
-				for (Method checkMethod : arg.customCondition().matchConditionClass().getDeclaredMethods()) {
-					if (checkMethod.getName().equals(arg.customCondition().matchConditionMethod())) {
-						matchConditionMethod = checkMethod;
-						break;
-					}
-				}
-
-				//custom argument
-				arguments[i] = new CustomArgument(arg.name(),arg.description(),arg.usage(),
-						arg.customCondition().matchConditionClass(), matchConditionMethod, arg.optional());
-			}
+			CommandArgumentAnnotation[] commandArgumentAnnotations = method.getAnnotationsByType(CommandArgumentAnnotation.class);
+			Argument[] arguments = new Argument[commandArgumentAnnotations.length];
+			registerCommandArguments(commandArgumentAnnotations, arguments);
 
 
 			//annotated command method, gets annotations
@@ -105,8 +84,10 @@ public class CustomCommandAPI {
 				commandPermissions.add(permissionAnnotation.permission());
 			}
 
-			//maps method to command pathway
+
+			//maps reflection method to command id
 			this.methodMap.put("@commandAnnotation@" + commandAnnotation.id(), method);
+
 
 			CustomCommand command;
 
@@ -184,6 +165,33 @@ public class CustomCommandAPI {
 			System.out.println("Registering Command Tab Method " + this.getCommand(tabAnnotation.id(), tabAnnotation.name()));
 		}
 
+	}
+
+	private void registerCommandArguments(CommandArgumentAnnotation @NotNull [] commandArgumentAnnotations, Argument[] arguments) {
+		for (int i = 0; i < commandArgumentAnnotations.length; i++) {
+			CommandArgumentAnnotation arg = commandArgumentAnnotations[i];
+
+			if (arg.customCondition().matchConditionClass() == CommandArgumentCustomConditionAnnotation.BASE_CLASS) {
+				//not custom argument
+				arguments[i] = new Argument(arg.name(),arg.description(),arg.usage(),
+						Argument.extractMatchConditions(arg.condition().matchCondition()),
+						arg.optional(), arg.condition().checkValidPlayerName(), arg.condition().checkValidInteger(),
+						arg.condition().checkValidFloat(), arg.condition().minNumber(), arg.condition().maxNumber());
+				continue;
+			}
+
+			Method matchConditionMethod = null;
+			for (Method checkMethod : arg.customCondition().matchConditionClass().getDeclaredMethods()) {
+				if (checkMethod.getName().equals(arg.customCondition().matchConditionMethod())) {
+					matchConditionMethod = checkMethod;
+					break;
+				}
+			}
+
+			//custom argument
+			arguments[i] = new CustomArgument(arg.name(),arg.description(),arg.usage(),
+					arg.customCondition().matchConditionClass(), matchConditionMethod, arg.optional());
+		}
 	}
 
 	/**

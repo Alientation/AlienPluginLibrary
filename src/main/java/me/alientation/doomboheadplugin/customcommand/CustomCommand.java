@@ -14,6 +14,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -28,51 +29,30 @@ import org.jetbrains.annotations.NotNull;
  * for example /help list add ___ has the id help.list.add?1
  */
 public class CustomCommand implements CommandExecutor, TabCompleter {
-	//A unique identifier for the specific command. For example the command /help list -> help.list
-	private final String id;
-
-	//name of the command /help list -> list
-	private final String name;
-
-	//description of the command that is displayed
-	private String description;
-
-	//usage displayed when the onCommand fails
-	private String usage;
-
-	//Aliases to the command
-	private final List<String> aliases;
-
-	//permissions for the current command, TODO link it with the CustomPermission
-	private final Set<String> permissions;
+	private final String id; //A unique identifier for the specific command. For example the command /help list -> help.list
+	private final String name; //name of the command /help list -> list
+	private String description; //description of the command that is displayed
+	private String usage; //usage displayed when the onCommand fails
+	private final List<String> aliases; //Aliases to the command
+	private final Set<String> permissions; //permissions for the current command, TODO link it with the CustomPermission
 	private final Set<String> requiredPermissions;
+	private Argument[] arguments; //arguments for the command
 
-	//arguments for the command
-	private Argument[] arguments;
+	private CustomCommand parent; //Parent command. For example the command /help list -> help
+	private final Set<CustomCommand> children; //Sub commands of this parent command. inherits the same permission requirements as the parent command
 
+	private Method commandMethod, tabMethod;
+	private CustomCommandAPI commandMethodContainer, tabMethodContainer;
 
-	//The parent command. For example the command /help list -> help
-	private CustomCommand parent;
-
-	//The sub commands of this parent command. All sub commands inherit the same permission requirements as the parent command
-	private final Set<CustomCommand> children;
-
-	//the methods linked to the custom command
-	private Method commandMethod;
-	private Method tabMethod;
-
-	//the classes containing the linked methods
-	private CustomCommandAPI commandMethodContainer;
-	private CustomCommandAPI tabMethodContainer;
-
-	//BukkitCommand linked to this
-	private BaseCommand baseCommand;
-
-	//Command Manager
+	private BaseCommand baseCommand; //BukkitCommand linked to this
 	private final CustomCommandManager manager;
 
 	//whether to show aliases as possible tab completions
-	private boolean showAliasesInTabCompletion;
+	//whether this command is hidden from default tab complete
+	//whether this command is disabled and cannot be invoked
+	//whether to ignore permission checking for this command
+	private boolean showAliasesInTabCompletion, hidden, disabled, ignorePermissions;
+	private CustomCommand aliasOf;
 
 	//perhaps move this attribute to the subcommand and instead ask the subcommand whether to show it to the player on tab completion
 	private boolean showHiddenSubcommandsInTabCompletion;//todo
@@ -82,16 +62,14 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 
 	//perhaps move this attribute to the subcommand and instead ask the subcommand whether to show it to the player on tab completion
 	private boolean showSubcommandsRegardlessOfPermissionsInTabCompletion;//todo
-	private boolean visible; //todo change this to hidden, so invert the usages
-	private boolean disabled;
-	private boolean ignorePermissions;
 
 	public static class Builder {
 		private CustomCommandManager manager;
 		private String id, name, description, usage;
 		private final Collection<String> aliases, permissions, requiredPermissions;
 		private Argument[] arguments;
-		private boolean showAliasesInTabCompletion, visible, disabled, ignorePermissions;
+		private boolean showAliasesInTabCompletion, hidden, disabled, ignorePermissions, isAlias;
+		private CustomCommand aliasOf;
 
 		private Builder() {
 			aliases = new ArrayList<>();
@@ -99,11 +77,12 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 			permissions = new HashSet<>();
 			arguments = new Argument[] {};
 			showAliasesInTabCompletion = false;
-			visible = true;
+			hidden = false;
 			disabled = false;
 			ignorePermissions = false;
 		}
-		public static Builder newInstance() {
+		@Contract(" -> new")
+		public static @NotNull Builder newInstance() {
 			return new Builder();
 		}
 
@@ -172,8 +151,8 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 			return this;
 		}
 
-		public Builder visible(boolean visible) {
-			this.visible = visible;
+		public Builder hidden(boolean hidden) {
+			this.hidden = hidden;
 			return this;
 		}
 
@@ -184,6 +163,11 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 
 		public Builder ignorePermissions(boolean ignorePermissions) {
 			this.ignorePermissions = ignorePermissions;
+			return this;
+		}
+
+		public Builder aliasOf(CustomCommand aliasOf) {
+			this.aliasOf = aliasOf;
 			return this;
 		}
 
@@ -203,7 +187,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	 *
 	 * @param builder Builder class
 	 */
-	public CustomCommand(Builder builder) {
+	public CustomCommand(@NotNull Builder builder) {
 		this.id = builder.id;
 		this.name = builder.name;
 		this.description = builder.description;
@@ -221,9 +205,10 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		this.manager = builder.manager;
 
 		this.showAliasesInTabCompletion = builder.showAliasesInTabCompletion;
-		this.visible = builder.visible;
+		this.hidden = builder.hidden;
 		this.disabled = builder.disabled;
 		this.ignorePermissions = builder.ignorePermissions;
+		this.aliasOf = builder.aliasOf;
 	}
 
 	/**
@@ -254,6 +239,12 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 			return !commandCallAttemptFail(sender,command,label,args);
 		}
 
+		//check if command is an alias to another command
+		if (isAlias()) {
+			System.out.println("Command is an alias to " + aliasOf);
+			return aliasOf.onCommand(sender, command, label, args);
+		}
+
 		//sender doesn't have permissions
 		if (!hasPermissions(sender)) {
 			System.out.println("Sender does not have permissions");
@@ -278,7 +269,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		CustomCommand child = args.length > arguments.length ? getChildrenByName(args[arguments.length]) : null;
 		if (child != null) {
 			System.out.println("There is a child command");
-			return child.onCommand(sender, command, label, removeFirst(args, 1 + arguments.length));
+			return child.onCommand(sender, command, args[0], removeFirst(args, 1 + arguments.length));
 		}
 
 		//no linked on command method
@@ -329,7 +320,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		System.out.println("Tab completion for " + command.getName() + " with " + Arrays.toString(args) + " args");
-		if (!visible) return new ArrayList<>();
+		if (hidden) return new ArrayList<>();
 
 		//there is a custom tab completion for this
 		if (this.tabMethod != null) {
@@ -362,7 +353,7 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 			//no child to process tab complete
 			System.out.println("Checking child for tab completion");
 			CustomCommand child = getChildrenByName(args[arguments.length]);
-			if (child == null || !child.isVisible()) return new ArrayList<>();
+			if (child == null || child.isHidden()) return new ArrayList<>();
 
 			//child processes tab complete
 			System.out.println("sending tab completion processing to child command");
@@ -374,16 +365,18 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 
 		//no more command arguments to be passed
 		if (args.length == 1 + arguments.length) {
-			for (CustomCommand commands : this.children) {
+			for (CustomCommand cmd : this.children) {
+				if (cmd.isAlias() && !showAliasesInTabCompletion) continue;
+
 				//adding child command names
-				if (commands.hasPermissions(sender) && commands.getName().indexOf(args[0]) == 0)
-					possibleCompletions.add(commands.getName());
+				if ((cmd.hasPermissions(sender) || ignorePermissions) && cmd.getName().indexOf(args[0]) == 0)
+					possibleCompletions.add(cmd.getName());
 
 				//don't show aliases on tab completion
 				if (!showAliasesInTabCompletion) continue;
 
 				//adding aliases of the child commands
-				for (String s : commands.getAliases())
+				for (String s : cmd.getAliases())
 					if (s.indexOf(args[0]) == 0) possibleCompletions.add(s);
 			}
 		} else { //command arguments todo incorporate optional arguments into these checks (if there is optional arguments, this means there should not be further children
@@ -579,17 +572,17 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		return aliases;
 	}
 
-	public void clearAliases() {
+	public void clearAliases() { //todo add functionality for removing aliases with different id pathway
 		this.aliases.clear();
 		if (baseCommand != null) this.baseCommand.setAliases(new ArrayList<>());
 	}
 
-	public void addAlias(String alias) {
+	public void addAlias(String alias) { //todo add functionality for adding aliases with different id pathway
 		this.aliases.add(alias);
 		if (baseCommand != null) this.baseCommand.setAliases(this.aliases);
 	}
 
-	public void removeAlias(String alias) {
+	public void removeAlias(String alias) { //todo add functionality for removing aliases with different id pathway
 		for (int i = 0; i < aliases.size(); i++)
 			if (aliases.get(i).equals(alias)) aliases.remove(i--);
 		if (baseCommand != null) this.baseCommand.setAliases(aliases);
@@ -738,16 +731,16 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 		this.showAliasesInTabCompletion = true;
 	}
 
-	public boolean isVisible() {
-		return this.visible;
+	public boolean isHidden() {
+		return this.hidden;
 	}
 
 	public void hide() {
-		this.visible = false;
+		this.hidden = true;
 	}
 
 	public void show() {
-		this.visible = true;
+		this.hidden = false;
 	}
 
 	public boolean isDisabled() {
@@ -772,6 +765,18 @@ public class CustomCommand implements CommandExecutor, TabCompleter {
 
 	public void checkPermissions() {
 		this.ignorePermissions = false;
+	}
+
+	public CustomCommand getAliasOf() {
+		return this.aliasOf;
+	}
+
+	public void setAliasOf(CustomCommand aliasOf) {
+		this.aliasOf = aliasOf;
+	}
+
+	public boolean isAlias() {
+		return this.aliasOf != null;
 	}
 
 	public boolean hasMethod() {

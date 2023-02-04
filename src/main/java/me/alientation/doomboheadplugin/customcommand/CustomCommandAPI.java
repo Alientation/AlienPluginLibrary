@@ -72,7 +72,15 @@ public class CustomCommandAPI {
 			String commandName = commandAnnotation.name();
 			String commandID = commandAnnotation.id();
 
-			List<String> commandAliases = new ArrayList<>(Arrays.asList(commandAnnotation.aliases()));
+			List<String> commandAliases = new ArrayList<>();
+			List<String> disjointCommandAliases = new ArrayList<>();
+			for (String alias : commandAnnotation.aliases()) {
+				if (alias.charAt(0) == '@') //this is an alias with a unique id pathway
+					disjointCommandAliases.add(alias.substring(1));
+				else
+					commandAliases.add(alias);
+			}
+
 			String commandDescription = commandAnnotation.description();
 			String commandUsage = commandAnnotation.usage();
 
@@ -121,33 +129,28 @@ public class CustomCommandAPI {
 				command = builder.build();
 			}
 
-			//maps command and registers and children if needed
-			this.commandManager.mapCommand(command);
+			//register aliases of this command
+			CustomCommand[] customCommandAliases = new CustomCommand[disjointCommandAliases.size()];
+			for (int i = 0; i < customCommandAliases.length; i++) {
+				String name = disjointCommandAliases.get(i).split("\\.")[0];
+				String id = disjointCommandAliases.get(i);
+				customCommandAliases[i] = CustomCommand.Builder.newInstance().manager(commandManager).id(id).name(name).aliasOf(command).build();
+			}
 
+			//maps command and registers and children if needed
 			System.out.println("Registering Command Method " + command);
+			this.commandManager.mapCommand(command);
+			for (CustomCommand aliasCommand : customCommandAliases) {
+				System.out.println("Registering Alias Command Method " + aliasCommand);
+				this.commandManager.mapCommand(aliasCommand);
+			}
 
 			//map command to bukkit
-			if (command.isParent()) {
-				System.out.println("^ is a parent command");
-				Field bukkitCommandMap;
-				try {
 
-					bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-					bukkitCommandMap.setAccessible(true);
-					CommandMap commandMap = ((CommandMap) bukkitCommandMap.get(Bukkit.getServer()));
+			registerCommandToBukkit(command);
+			for (CustomCommand aliasCommand : customCommandAliases)
+				registerCommandToBukkit(aliasCommand);
 
-					//if plugin has another command of the same name, resolve the issues?
-					if (this.commandManager.getPlugin().getCommand(commandName) != null) {
-						System.out.println("Resolving duplicate command names (" + commandName + ")");
-						Objects.requireNonNull(this.commandManager.getPlugin().getCommand(commandName)).unregister(commandMap);
-					}
-
-					commandMap.register(commandName, new BaseCommand(commandName,commandDescription, commandUsage, commandAliases, command));
-
-				} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-					e.printStackTrace();
-				}
-			}
 
 			command.validateCommandMethod(method,this);
 		}
@@ -194,6 +197,32 @@ public class CustomCommandAPI {
 		}
 	}
 
+	private void registerCommandToBukkit(CustomCommand command) {
+		if (command.isParent()) {
+			System.out.println(command + " is a parent command");
+			Field bukkitCommandMap;
+			try {
+
+				bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+				bukkitCommandMap.setAccessible(true);
+				CommandMap commandMap = ((CommandMap) bukkitCommandMap.get(Bukkit.getServer()));
+
+				//if plugin has another command of the same name, resolve the issues?
+				if (this.commandManager.getPlugin().getCommand(command.getName()) != null) {
+					System.out.println("Resolving duplicate command names (" + command.getName() + ")");
+					Objects.requireNonNull(this.commandManager.getPlugin().getCommand(command.getName())).unregister(commandMap);
+				}
+
+				commandMap.register(command.getName(),
+						new BaseCommand(command.getName(),command.getDescription(), command.getUsage(), command.getAliases(), command));
+
+			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
 	/**
 	 * Gets the command for the given search parameters
 	 *
@@ -211,6 +240,7 @@ public class CustomCommandAPI {
 
 		return command;
 	}
+
 	/**
 	 * Gets the method mapping
 	 *

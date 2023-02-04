@@ -17,7 +17,7 @@ argument annotations haven't been tested nor has the conditions either
 
 
 CommandAlias should be an alternate unique id that also refers to the current command
-instead of an alternate command name
+instead of an alternate command name todo check if this was fixed
 
 perform checks for duplicate command ids
 

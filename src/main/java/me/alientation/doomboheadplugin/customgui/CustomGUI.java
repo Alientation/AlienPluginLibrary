@@ -2,8 +2,10 @@ package me.alientation.doomboheadplugin.customgui;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,21 +14,11 @@ import java.util.Map;
  * Represents a copy of a CustomGUIBlueprint
  */
 public class CustomGUI {
-
-    //id of this blueprint copy
-    private final String guiID;
-
-    //title to be displayed
-    private final String guiTitle;
-
-    //the parent blueprint
-    private final CustomGUIBlueprint guiBlueprint;
-
-    //inventory that holds this gui
-    private final Inventory inventory;
-
-    //map of slot location to ItemSlot
-    private final Map<Integer, ItemSlot> slotsMap = new HashMap<>();
+    private final String guiID; //id of this blueprint copy
+    private final String guiTitle; //title to be displayed
+    private final CustomGUIBlueprint guiBlueprint; //the parent blueprint
+    private final Inventory inventory; //inventory that holds this gui
+    private final Map<Integer, ItemSlot> slotsMap = new HashMap<>(); //map of slot location to ItemSlot
 
 
     public static class Builder {
@@ -73,7 +65,7 @@ public class CustomGUI {
      *
      * @param builder Builder pattern
      */
-    public CustomGUI(Builder builder) {
+    public CustomGUI(@NotNull Builder builder) {
         this.guiID = builder.guiTitle;
         this.guiTitle = builder.guiTitle;
         this.guiBlueprint = builder.guiBlueprint;
@@ -82,6 +74,10 @@ public class CustomGUI {
             this.inventory = Bukkit.createInventory(null, guiBlueprint.size(), guiTitle);
         else
             this.inventory = Bukkit.createInventory(null, guiBlueprint.getBlueprintInventoryType(), guiTitle);
+    }
+
+    public void onClick(InventoryClickEvent event) {
+
     }
 
     public String getGuiID() {
@@ -117,6 +113,14 @@ public class CustomGUI {
         this.slotsMap.put(index, item);
 
         this.inventory.setItem(index,item.getItem());
+    }
+
+    public void moveSlot(int indexFrom, int indexTo) {
+        //todo
+    }
+
+    public void swapSlot(int indexFrom, int indexTo) {
+        //todo
     }
 
     public void open(Player player) {

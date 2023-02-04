@@ -55,7 +55,9 @@ public class InventoryListener implements Listener {
 			gui.getGUIListener().onPlayerInventoryClick(gui, e);
 			return;
 		}
-		
+
+
+
 		ItemSlot itemSlot = gui.getSlot(e.getRawSlot());
 		if (itemSlot != null) {
 			itemSlot.onItemClick(gui, e);

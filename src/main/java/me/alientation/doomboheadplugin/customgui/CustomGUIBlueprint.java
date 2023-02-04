@@ -14,33 +14,15 @@ import org.jetbrains.annotations.NotNull;
 public class CustomGUIBlueprint {
 	public static final String MAIN_COPY_ID = "CustomGUI Blueprint Main Copy";
 	private CustomGUIBlueprintManager manager;
-
-	//id of the custom gui
-	private final String blueprintID;
-
-	//title of the bukkit inventory
-	private final String blueprintTitle;
-
+	private final String blueprintID; //id of the custom gui
+	private final String blueprintTitle; //title of the bukkit inventory
 	private final InventoryType blueprintInventoryType;
-
-	//size of the bukkit inventory
-	private final int size;
-
-	//attached listener so that this gui can listen to events
-	private final GUIListener blueprintGUIListener;
-
-	//map of slot location to ItemSlot
-	private final Map<Integer, ItemSlot> blueprintSlotsMap = new HashMap<>();
-
-	//copies of this blueprint
-	private final Map<String,CustomGUI> guiCopies;
-
-	//when opened, whether to open a copy that is relative to the player's name or just the main copy
-	private final boolean copiesUniqueToPlayer;
-
-	//automatically safe deletes the previous copy if there is one, essentially overriding past copies
-	private final boolean allowOverridingCopies;
-
+	private final int size; //size of the bukkit inventory
+	private final GUIListener blueprintGUIListener; //attached listener so that this gui can listen to events
+	private final Map<Integer, ItemSlot> blueprintSlotsMap = new HashMap<>(); //map of slot location to ItemSlot
+	private final Map<String,CustomGUI> guiCopies; //copies of this blueprint
+	private final boolean copiesUniqueToPlayer; //when opened, whether to open a copy that is relative to the player's name or just the main copy
+	private final boolean allowOverridingCopies; //automatically safe deletes the previous copy if there is one, essentially overriding past copies
 
 	public static class Builder {
 		String blueprintID, blueprintTitle;

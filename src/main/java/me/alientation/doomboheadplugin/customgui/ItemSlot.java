@@ -11,18 +11,11 @@ import org.jetbrains.annotations.NotNull;
  * Represents a slot in a CustomGUIBlueprint inventory and actions associated with it
  */
 public class ItemSlot {
-
-	//slot id on the GUI inventory for this item slot
-	private final int slotID;
-
-	//parent gui container
-	private final CustomGUIBlueprint guiParent;
-
-	//item represented at this slot
-	private ItemStack item;
-
-	//executor when clicked
-	private Method actionMethod;
+	private final int slotID; //slot id on the GUI inventory for this item slot
+	private final CustomGUIBlueprint guiParent; //parent gui container
+	private ItemStack item; //item represented at this slot
+	private Method actionMethod; //executor when clicked
+	private boolean disabled, frozen, hidden; //whether item click events will be accepted, whether the item is locked in place or not, whether the item is hidden
 
 	static class Builder {
 		int slotID;

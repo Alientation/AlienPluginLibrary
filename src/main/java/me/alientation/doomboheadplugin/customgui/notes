@@ -20,11 +20,21 @@ in CustomGUIBluePrint -> detail the Inventory type
 Add console logging messages
 
 
-SlotTypes
-- Button
-- Empty
+ItemSlot
+- reference to a gui object
+- contains information of the item represented at the slot
 
-SlotStates
+GUIElement : size/which slots contained within this element, click event (various types)
+  - Window
+  - TabMenu
+  - Button
+    - Switch : on/off
+    - TabMenuButton : displays specified window
+  - ProgressBar
+
+
+ItemSlotStates
 - Frozen
 - Hidden
 - Permissions/conditions
+

@@ -24,8 +24,12 @@ ItemSlot
 - reference to a gui object
 - contains information of the item represented at the slot
 
+2 ways to do this
+either have windows be separate custom gui's
+or, when switching windows, just wipe current gui and replace with new window
+
 GUIElement : size/which slots contained within this element, click event (various types)
-  - Window
+  - Window (window can have size bigger than the size of chest)
   - TabMenu
   - Button
     - Switch : on/off
@@ -38,3 +42,6 @@ ItemSlotStates
 - Hidden
 - Permissions/conditions
 
+todo
+gui blueprint should store the functionality whereas the copy should store unique details
+- item slots should be unique to each copy, therefore CustomGUI should make a copy of each itemslot/gui element

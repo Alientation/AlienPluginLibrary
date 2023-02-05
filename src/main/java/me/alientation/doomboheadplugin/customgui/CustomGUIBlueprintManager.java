@@ -16,8 +16,8 @@ public class CustomGUIBlueprintManager {
 	//map of blueprint id to blueprint
 	private final Map<String, CustomGUIBlueprint> GUI_MAP;
 
-	//map of inventory object to blueprint
-	private final Map<Inventory, CustomGUIBlueprint> INVENTORY_MAP;
+	//map of inventory object to CustomGUI
+	private final Map<Inventory, CustomGUI> INVENTORY_MAP;
 	private final JavaPlugin plugin;
 
 	//the listener to Bukkit events to forward those events to the appropriate custom gui
@@ -51,8 +51,8 @@ public class CustomGUIBlueprintManager {
 		blueprint.registerManager(this);
 	}
 
-	public void registerBlueprintCopy(Inventory inventory, CustomGUIBlueprint blueprint) {
-		this.INVENTORY_MAP.put(inventory,blueprint);
+	public void registerBlueprintCopy(Inventory inventory, CustomGUI customGUI) {
+		this.INVENTORY_MAP.put(inventory,customGUI);
 	}
 
 	public void unregisterBlueprintCopy(Inventory inventory) {
@@ -67,7 +67,7 @@ public class CustomGUIBlueprintManager {
 		return this.GUI_MAP.get(id);
 	}
 	
-	public CustomGUIBlueprint getGUI(Inventory inv) {
+	public CustomGUI getGUI(Inventory inv) {
 		return this.INVENTORY_MAP.get(inv);
 	}
 

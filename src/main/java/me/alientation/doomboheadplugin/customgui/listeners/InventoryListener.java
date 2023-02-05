@@ -1,5 +1,6 @@
 package me.alientation.doomboheadplugin.customgui.listeners;
 
+import me.alientation.doomboheadplugin.customgui.CustomGUI;
 import me.alientation.doomboheadplugin.customgui.CustomGUIBlueprint;
 import me.alientation.doomboheadplugin.customgui.CustomGUIBlueprintManager;
 import me.alientation.doomboheadplugin.customgui.ItemSlot;
@@ -47,16 +48,17 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onInvClick(@NotNull InventoryClickEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
-		
+		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		if (gui == null) return;
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
 		
 		if (e.getClickedInventory() instanceof PlayerInventory) {
-			gui.getGUIListener().onPlayerInventoryClick(gui, e);
+			guiBlueprint.getGUIListener().onPlayerInventoryClick(gui, e);
 			return;
 		}
 
-
+		guiBlueprint.getGUIListener().onInventoryInteract(gui,e);
 
 		ItemSlot itemSlot = gui.getSlot(e.getRawSlot());
 		if (itemSlot != null) {
@@ -67,146 +69,145 @@ public class InventoryListener implements Listener {
 	
 	@EventHandler
 	public void onInventoryOpen(@NotNull InventoryOpenEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
-		
+		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		if (gui == null) return;
-		
-		gui.getGUIListener().onOpen(gui,e);
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
+		guiBlueprint.getGUIListener().onOpen(gui,e);
 	}
 	
 	@EventHandler
 	public void onInventoryClose(@NotNull InventoryCloseEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
-		
+		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		if (gui == null) return;
-		
-		gui.getGUIListener().onClose(gui,e);
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
+		guiBlueprint.getGUIListener().onClose(gui,e);
 	}
 	
 	@EventHandler
 	public void onBrewComplete(@NotNull BrewEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getContents());
-		
+		CustomGUI gui = this.manager.getGUI(e.getContents());
 		if (gui == null) return;
-		
-		gui.getGUIListener().onBrewComplete(gui,e);
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
+		guiBlueprint.getGUIListener().onBrewComplete(gui,e);
 	}
 	
 	@EventHandler
 	public void onCraftItem(@NotNull CraftItemEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
+		CustomGUI gui = this.manager.getGUI(e.getInventory());
+		if (gui == null) return;
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
 		
 		if (gui == null) return;
-		
-		gui.getGUIListener().onCraftItem(gui,e);
+
+		guiBlueprint.getGUIListener().onCraftItem(gui,e);
 	}
 	
 	@EventHandler
 	public void onFurnaceExtract(@NotNull FurnaceExtractEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getPlayer().getOpenInventory().getTopInventory());
-		
+		CustomGUI gui = this.manager.getGUI(e.getPlayer().getOpenInventory().getTopInventory());
 		if (gui == null) return;
-		
-		gui.getGUIListener().onFurnaceExtract(gui,e);
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
+		guiBlueprint.getGUIListener().onFurnaceExtract(gui,e);
 	}
 	
 	@EventHandler
 	public void onInventoryDrag(@NotNull InventoryDragEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
-		
+		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		if (gui == null) return;
-		
-		gui.getGUIListener().onInventoryDrag(gui,e);
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
+		guiBlueprint.getGUIListener().onInventoryDrag(gui,e);
 	}
 	
 	@EventHandler
 	public void onPlayerAction(@NotNull InventoryEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
-		
+		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		if (gui == null) return;
-		
-		gui.getGUIListener().onPlayerAction(gui,e);
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
+		guiBlueprint.getGUIListener().onPlayerAction(gui,e);
 	}
 	
 	@EventHandler
 	public void onInventoryInteract(@NotNull InventoryInteractEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
-		
+		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		if (gui == null) return;
-		
-		gui.getGUIListener().onInventoryInteract(gui,e);
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
+		guiBlueprint.getGUIListener().onInventoryInteract(gui,e);
 	}
 	
 	@EventHandler
 	public void onInventoryMoveItem(@NotNull InventoryMoveItemEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getSource());
-		
+		CustomGUI gui = this.manager.getGUI(e.getSource());
 		if (gui != null)
-			gui.getGUIListener().onInventoryItemExit(gui,e);
+			gui.getGuiBlueprint().getGUIListener().onInventoryItemExit(gui,e);
 		
 		gui = this.manager.getGUI(e.getDestination());
-		
 		if (gui != null)
-			gui.getGUIListener().onInventoryItemEnter(gui, e);
-		
+			gui.getGuiBlueprint().getGUIListener().onInventoryItemEnter(gui, e);
+
 		gui = this.manager.getGUI(e.getInitiator());
-		
 		if (gui != null)
-			gui.getGUIListener().onInventoryItemMoveInitated(gui, e);
+			gui.getGuiBlueprint().getGUIListener().onInventoryItemMoveInitiated(gui, e);
 	}
 	
 	@EventHandler
 	public void onInventoryPickupItem(@NotNull InventoryPickupItemEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
-		
+		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		if (gui == null) return;
-		
-		gui.getGUIListener().onInventoryPickupItem(gui,e);
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
+		guiBlueprint.getGUIListener().onInventoryPickupItem(gui,e);
 	}
 	
 	@EventHandler
 	public void onAnvilInsert(@NotNull PrepareAnvilEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
-		
+		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		if (gui == null) return;
-		
-		gui.getGUIListener().onAnvilInsert(gui,e);
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
+		guiBlueprint.getGUIListener().onAnvilInsert(gui,e);
 	}
 	
 	@EventHandler
 	public void onCraftInsert(@NotNull PrepareItemCraftEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
-		
+		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		if (gui == null) return;
-		
-		gui.getGUIListener().onCraftInsert(gui,e);
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
+		guiBlueprint.getGUIListener().onCraftInsert(gui,e);
 	}
 	
 	@EventHandler
 	public void onSmithingInsert(@NotNull PrepareSmithingEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
-		
+		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		if (gui == null) return;
-		
-		gui.getGUIListener().onSmithingInsert(gui,e);
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
+		guiBlueprint.getGUIListener().onSmithingInsert(gui,e);
 	}
 	
 	@EventHandler
 	public void onSmithItem(@NotNull SmithItemEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
-		
+		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		if (gui == null) return;
-		
-		gui.getGUIListener().onSmithItem(gui,e);
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
+		guiBlueprint.getGUIListener().onSmithItem(gui,e);
 	}
 	
 	@EventHandler
 	public void onTradeSelect(@NotNull TradeSelectEvent e) {
-		CustomGUIBlueprint gui = this.manager.getGUI(e.getInventory());
-		
+		CustomGUI gui = this.manager.getGUI(e.getInventory());
 		if (gui == null) return;
-		
-		gui.getGUIListener().onTradeSelect(gui,e);
+		CustomGUIBlueprint guiBlueprint = gui.getGuiBlueprint();
+
+		guiBlueprint.getGUIListener().onTradeSelect(gui,e);
 	}
 	
 	public CustomGUIBlueprintManager getCustomGUIManager() { return this.manager; }

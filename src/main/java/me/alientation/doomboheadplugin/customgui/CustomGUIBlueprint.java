@@ -5,7 +5,9 @@ import java.util.Map;
 
 import me.alientation.doomboheadplugin.customgui.listeners.GUIListener;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -20,7 +22,9 @@ public class CustomGUIBlueprint {
 	private final int size; //size of the bukkit inventory
 	private final GUIListener blueprintGUIListener; //attached listener so that this gui can listen to events
 	private final Map<Integer, ItemSlot> blueprintSlotsMap = new HashMap<>(); //map of slot location to ItemSlot
+
 	private final Map<String,CustomGUI> guiCopies; //copies of this blueprint
+
 	private final boolean copiesUniqueToPlayer; //when opened, whether to open a copy that is relative to the player's name or just the main copy
 	private final boolean allowOverridingCopies; //automatically safe deletes the previous copy if there is one, essentially overriding past copies
 
@@ -52,8 +56,9 @@ public class CustomGUIBlueprint {
 			return this;
 		}
 
-		public Builder guiCopies(Map<String,CustomGUI> guiCopes) {
-			this.guiCopies.putAll(guiCopes);
+		public Builder guiCopies(@NotNull Map<String,CustomGUI> guiCopies) {
+			for (String guiCopyID : guiCopies.keySet())
+				guiCopy(guiCopyID,guiCopies.get(guiCopyID));
 			return this;
 		}
 
@@ -141,7 +146,7 @@ public class CustomGUIBlueprint {
 		this.manager = manager;
 
 		//registers existing child copies to the manager
-		for (CustomGUI copy : guiCopies.values()) manager.registerBlueprintCopy(copy.getInventory(),this);
+		for (CustomGUI copy : guiCopies.values()) manager.registerBlueprintCopy(copy.getInventory(),copy);
 	}
 
 	/**
@@ -162,7 +167,7 @@ public class CustomGUIBlueprint {
 		this.guiCopies.put(guiID,newCopy);
 
 		//registers the blueprint copy's inventory to this blueprint in the manager
-		if (manager != null) manager.registerBlueprintCopy(newCopy.getInventory(), this);
+		if (manager != null) manager.registerBlueprintCopy(newCopy.getInventory(), newCopy);
 
 		return newCopy;
 	}

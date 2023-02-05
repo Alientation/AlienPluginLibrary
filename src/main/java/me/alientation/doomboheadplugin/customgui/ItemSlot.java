@@ -81,7 +81,7 @@ public class ItemSlot {
 	 * @param gui CustomGUIBlueprint where the click event happened
 	 * @param e Inventory click event
 	 */
-	public void onItemClick(CustomGUIBlueprint gui, InventoryClickEvent e) {
+	public void onItemClick(CustomGUI gui, InventoryClickEvent e) {
 		if (this.actionMethod == null) return;
 
 		Object[] params = new Object[this.actionMethod.getParameterCount()];
@@ -89,7 +89,7 @@ public class ItemSlot {
 
 		//TODO: Add parameter flag annotations so that the user can greater customize the parameters that get accepted
 		for (Class<?> c : this.actionMethod.getParameterTypes()) {
-			if (c == CustomGUIBlueprint.class)	params[paramsIndex] = gui;
+			if (c == CustomGUI.class)	params[paramsIndex] = gui;
 			else if (c == InventoryClickEvent.class) 	params[paramsIndex] = e;
 			else 							params[paramsIndex] = null;
 			paramsIndex++;
